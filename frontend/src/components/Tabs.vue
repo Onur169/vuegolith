@@ -26,7 +26,7 @@
         :key="idx"
         :class="['rounded-xl bg-white p-3']"
       >
-        <div v-if="activeTab === tab.name">{{ tab.content }}</div>
+        <component :is="tab.content" v-if="activeTab === tab.name" />
       </TabPanel>
     </TabPanels>
   </TabGroup>
@@ -39,7 +39,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 export interface TabItem {
   name: string;
   id: number;
-  content: string;
+  content: JSX.Element;
 }
 
 const { tabs } = defineProps<{
