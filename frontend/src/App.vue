@@ -31,10 +31,10 @@ const tabs = ref([
     name: "log",
     id: 1,
     content: (
-      <div>
+      <>
         <Textarea class="mb-4" />
         <Button class="mb-4 w-full" text="Speichern" isLoading={false} />
-      </div>
+      </>
     ),
   },
   {
