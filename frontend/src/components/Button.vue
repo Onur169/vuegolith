@@ -1,5 +1,6 @@
 <template>
   <button
+    @click="handleClick"
     class="rounded-lg border-2 border-primary hover:border-primary/60 active:border-accent focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm"
   >
     <svg
@@ -23,8 +24,6 @@
   </button>
 </template>
 <script lang="ts" setup>
-import { onMounted } from "vue";
-
 interface Props {
   isLoading?: boolean;
   text: string;
@@ -32,11 +31,7 @@ interface Props {
 
 const { isLoading } = defineProps<Props>();
 
-const emit = defineEmits(["click"]);
+const emit = defineEmits(["clicked"]);
 
-// const handleClick = () => emit("click");
-
-onMounted(() => {
-  console.log("onMounted", isLoading);
-});
+const handleClick = () => emit("clicked");
 </script>

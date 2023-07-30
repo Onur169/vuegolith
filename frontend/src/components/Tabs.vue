@@ -9,7 +9,7 @@
       >
         <button
           :class="[
-            'w-full select-none rounded-lg py-2.5 text-sm font-medium leading-5 focus:outline-none',
+            'capitalize w-full select-none rounded-lg py-2.5 text-sm font-medium leading-5 focus:outline-none',
             selected
               ? 'bg-secondary shadow'
               : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',

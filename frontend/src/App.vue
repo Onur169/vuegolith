@@ -3,17 +3,7 @@
     <div class="flex flex-col justify-center w-full p-6 md:w-3/4">
       <Tabs :tabs="tabs">
         <template v-slot:default="{ tab, activeTab }">
-          <component
-            :is="tab.content"
-            v-if="'upload' === activeTab"
-            @files="handleFilesSelected"
-          />
-          <component
-            :is="tab.content"
-            v-else-if="'log' === activeTab"
-            @click="handleLogButton"
-          />
-          <p v-else>Dieser Tab steht nicht zur Verfügung</p>
+          <component :is="tab.content" />
         </template>
       </Tabs>
     </div>
@@ -35,7 +25,6 @@ const handleFilesSelected = (files: FileList) => {
 const isLoading = ref(false);
 
 const handleLogButton = () => {
-  alert(324);
   log("hallo welt")
     .then(() => {
       console.log("Log erfolgreich");
@@ -56,6 +45,7 @@ const tabs = ref([
           class="mb-4 w-full"
           text="Speichern"
           isLoading={isLoading.value}
+          onClicked={handleLogButton}
         />
       </>
     ),
@@ -63,7 +53,7 @@ const tabs = ref([
   {
     name: "upload",
     id: 2,
-    content: <Filechooser />,
+    content: <Filechooser onFiles={handleFilesSelected} />,
   },
 ]);
 </script>
