@@ -1,5 +1,9 @@
 <template>
-  <textarea @change="handleChange"></textarea>
+  <textarea
+    @change="handleChange"
+    class="w-full resize-none h-24 rounded-lg outline-none border-2 border-primary p-4"
+    spellcheck="false"
+  ></textarea>
 </template>
 <script lang="ts" setup>
 import { onMounted } from "vue";

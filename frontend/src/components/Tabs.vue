@@ -1,6 +1,6 @@
 <template>
   <TabGroup>
-    <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+    <TabList class="flex space-x-1 rounded-xl bg-primary p-1 mb-4">
       <Tab
         v-for="tab in tabs"
         :key="tab.id"
@@ -9,9 +9,9 @@
       >
         <button
           :class="[
-            'w-full rounded-lg py-2.5 text-sm font-medium leading-5 focus:outline-none',
+            'w-full select-none rounded-lg py-2.5 text-sm font-medium leading-5 focus:outline-none',
             selected
-              ? 'bg-white shadow'
+              ? 'bg-secondary shadow'
               : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
           ]"
           @click="handleTabBtnClick(tab)"
@@ -20,11 +20,11 @@
         </button>
       </Tab>
     </TabList>
-    <TabPanels class="mt-2">
+    <TabPanels>
       <TabPanel
         v-for="(tab, idx) in tabs"
         :key="idx"
-        :class="['rounded-xl bg-white p-3']"
+        :class="['rounded-xl bg-white p-1']"
       >
         <component :is="tab.content" v-if="activeTab === tab.name" />
       </TabPanel>
