@@ -1,17 +1,13 @@
-// apiService.ts
 const BASE_URL = "http://localhost:8080"; // Replace with your server URL
 
 async function fetchJSON<T>(
   url: string,
   method: string,
-  data?: any
+  data?: LogPayload | FormData
 ): Promise<T> {
   const requestOptions: RequestInit = {
     method,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: data ? JSON.stringify(data) : undefined,
+    body: url.includes("/upload") ? (data as FormData) : JSON.stringify(data),
   };
 
   const response = await fetch(url, requestOptions);
@@ -33,6 +29,9 @@ export async function log(data: LogPayload): Promise<void> {
   return fetchJSON<void>(`${BASE_URL}/api/log`, "POST", data);
 }
 
-export async function uploadFile(formData: FormData): Promise<void> {
+export async function uploadFile(file: File): Promise<void> {
+  const formData = new FormData();
+  formData.append("file", file);
+
   return fetchJSON<void>(`${BASE_URL}/api/upload`, "POST", formData);
 }

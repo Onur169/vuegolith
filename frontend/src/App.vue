@@ -17,11 +17,19 @@ import Tabs from "./components/Tabs.vue";
 import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
-import { log } from "./api/api";
+import { log, uploadFile } from "./api/api";
 import StatusBar from "./components/StatusBar.vue";
 
 const handleFilesSelected = (files: FileList) => {
   console.log(files);
+
+  if (files.length > 0) {
+    const file = files[0];
+
+    uploadFile(file)
+      .then(() => setStatus("Upload erfolgreich"))
+      .catch(() => setStatus("Upload nicht erfolgreich"));
+  }
 };
 
 const handleLogButton = () => {

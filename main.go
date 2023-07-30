@@ -125,8 +125,9 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := r.ParseMultipartForm(10 << 20) // 10 MB maximum file size
+	err := r.ParseMultipartForm(10 << 30) // 1GB maximum file size
 	if err != nil {
+		fmt.Print(err.Error())
 		http.Error(w, "Failed to parse form", http.StatusInternalServerError)
 		return
 	}

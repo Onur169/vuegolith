@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, toRefs } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { de } from "date-fns/locale";
@@ -16,14 +16,14 @@ interface Props {
   logDate: Date;
 }
 
-const computedLogDate = ref("");
-
 const props = defineProps<Props>();
 const { text, logDate } = toRefs(props);
 
-// Funktion zum Aktualisieren des computedLogDate-Werts
-function updateLogDate() {
-  const distanceNow = logDate
+const computedLogDate = ref<string>("");
+
+// Arrow Function als updateLogDate
+const updateLogDate = () => {
+  const distanceNow = logDate.value
     ? formatDistanceToNow(logDate.value, {
         addSuffix: true,
         locale: de,
@@ -31,17 +31,23 @@ function updateLogDate() {
       })
     : "";
   computedLogDate.value = distanceNow;
-}
+};
 
 onMounted(() => {
   console.log("mounted");
   updateLogDate();
 
-  const timer = setInterval(updateLogDate, 1000 * 1);
+  const timer = setInterval(updateLogDate, 1000 * 10);
 
   onUnmounted(() => {
     console.log("unmounted");
     clearInterval(timer);
+
+    // Emitting des "destroy"-Events beim Unmounting
+    emit("destroy");
   });
 });
+
+// Deklaration des "destroy"-Events
+const emit = defineEmits();
 </script>
