@@ -24,7 +24,12 @@ async function fetchJSON<T>(
   return responseData;
 }
 
-export async function log(data: any): Promise<void> {
+export interface LogPayload {
+  message: string;
+  timestamp: string;
+}
+
+export async function log(data: LogPayload): Promise<void> {
   return fetchJSON<void>(`${BASE_URL}/api/log`, "POST", data);
 }
 

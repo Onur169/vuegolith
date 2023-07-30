@@ -6,7 +6,7 @@
           <component :is="tab.content" />
         </template>
       </Tabs>
-      <StatusBar text="Bisher keine Aktion durchgeführt" />
+      <StatusBar :text="statusText" :logDate="lastActionDate" />
     </div>
   </div>
 </template>
@@ -24,17 +24,27 @@ const handleFilesSelected = (files: FileList) => {
   console.log(files);
 };
 
+const handleLogButton = () => {
+  const logData = {
+    message: "Dies ist eine Testmeldung",
+    timestamp: new Date().toISOString(),
+  };
+
+  log(logData)
+    .then(() => setStatus("Log erfolgreich"))
+    .catch(() => setStatus("Log nicht erfolgreich"));
+};
+
+const setStatus = (msg: string) => {
+  lastActionDate.value = new Date();
+  statusText.value = msg;
+};
+
 const isLoading = ref(false);
 
-const handleLogButton = () => {
-  log("hallo welt")
-    .then(() => {
-      console.log("Log erfolgreich");
-    })
-    .catch(() => {
-      console.log("Log nicht erfolgreich");
-    });
-};
+const lastActionDate = ref<Date>(new Date());
+
+const statusText = ref("Bisher keine Aktion durchgeführt");
 
 const tabs = ref([
   {
