@@ -26,7 +26,8 @@
         :key="idx"
         :class="['rounded-xl bg-white p-1']"
       >
-        <component :is="tab.content" v-if="activeTab === tab.name" />
+        <slot :tab="tab" :activeTab="activeTab"></slot>
+        <!-- <component :is="tab.content" v-if="activeTab === tab.name" /> -->
       </TabPanel>
     </TabPanels>
   </TabGroup>
