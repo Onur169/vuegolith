@@ -1,11 +1,22 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"onursahin.dev/vuegolith/ui"
+
+	"github.com/gorilla/mux"
 )
+
+type APIResponse struct {
+	Ack  string      `json:"ack"`
+	Data interface{} `json:"data"`
+}
 
 func main() {
 	fmt.Println("Hallo Welt!")
@@ -15,10 +26,131 @@ func main() {
 	fs := http.FileServer(http.FS(assets))
 	http.Handle("/", http.StripPrefix("/", fs))
 
+	// Create a new Router from Gorilla Mux
+	router := mux.NewRouter()
+
+	// Define API endpoints with Gorilla Mux
+	router.HandleFunc("/api/log", handleLog).Methods("POST")
+	router.HandleFunc("/api/upload", handleUpload).Methods("POST")
+
+	// http.Handle("/api/", router)
+	corsHandler := corsMiddleware(router)
+	http.Handle("/api/", corsHandler)
+
 	port := ":8080"
-    println("Server läuft auf http://localhost" + port)
-    err := http.ListenAndServe(port, nil)
-    if err != nil {
-        panic(err)
-    }
+	fmt.Println("Server läuft auf http://localhost" + port)
+	err := http.ListenAndServe(port, nil)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Allow all origins for demonstration purposes.
+		// In a production environment, you might want to restrict this to specific origins.
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		// Set allowed headers and methods.
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+
+		if r.Method == "OPTIONS" {
+			// Handle preflight requests by responding with 200 OK.
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Call the next handler.
+		next.ServeHTTP(w, r)
+	})
+}
+
+func respondJSON(w http.ResponseWriter, status int, data interface{}) {
+	response := APIResponse{
+		Ack:  "success",
+		Data: data,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		http.Error(w, "Failed to encode JSON response", http.StatusInternalServerError)
+	}
+}
+
+func handleLog(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Parse the JSON payload
+	var data map[string]interface{}
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
+		return
+	}
+
+	// Create or append to the log file
+	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		http.Error(w, "Failed to create log file", http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
+
+	// Convert data to JSON string
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, "Failed to convert data to JSON", http.StatusInternalServerError)
+		return
+	}
+
+	// Write the log entry to the file
+	_, err = file.WriteString(string(jsonData) + "\n")
+	if err != nil {
+		http.Error(w, "Failed to write to log file", http.StatusInternalServerError)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, nil)
+}
+
+func handleUpload(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	err := r.ParseMultipartForm(10 << 20) // 10 MB maximum file size
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusInternalServerError)
+		return
+	}
+
+	file, handler, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "Failed to get file from form", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Save the uploaded file to the current directory
+	f, err := os.OpenFile(filepath.Join(".", handler.Filename), os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		http.Error(w, "Failed to save file", http.StatusInternalServerError)
+		return
+	}
+	defer f.Close()
+
+	_, err = io.Copy(f, file)
+	if err != nil {
+		http.Error(w, "Failed to write file content", http.StatusInternalServerError)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, nil)
 }

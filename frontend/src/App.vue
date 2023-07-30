@@ -8,7 +8,12 @@
             v-if="'upload' === activeTab"
             @files="handleFilesSelected"
           />
-          <component :is="tab.content" v-else />
+          <component
+            :is="tab.content"
+            v-else-if="'log' === activeTab"
+            @click="handleLogButton"
+          />
+          <p v-else>Dieser Tab steht nicht zur Verfügung</p>
         </template>
       </Tabs>
     </div>
@@ -21,9 +26,23 @@ import Tabs from "./components/Tabs.vue";
 import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
+import { log } from "./api/api";
 
 const handleFilesSelected = (files: FileList) => {
   console.log(files);
+};
+
+const isLoading = ref(false);
+
+const handleLogButton = () => {
+  alert(324);
+  log("hallo welt")
+    .then(() => {
+      console.log("Log erfolgreich");
+    })
+    .catch(() => {
+      console.log("Log nicht erfolgreich");
+    });
 };
 
 const tabs = ref([
@@ -33,16 +52,18 @@ const tabs = ref([
     content: (
       <>
         <Textarea class="mb-4" />
-        <Button class="mb-4 w-full" text="Speichern" isLoading={false} />
+        <Button
+          class="mb-4 w-full"
+          text="Speichern"
+          isLoading={isLoading.value}
+        />
       </>
     ),
   },
   {
     name: "upload",
     id: 2,
-    content: (
-      <Filechooser v-on:files="handleFilesSelected" v-on:foo="handleFoo" />
-    ),
+    content: <Filechooser />,
   },
 ]);
 </script>

@@ -32,6 +32,10 @@ interface Props {
 
 const { isLoading } = defineProps<Props>();
 
+const emit = defineEmits(["click"]);
+
+// const handleClick = () => emit("click");
+
 onMounted(() => {
   console.log("onMounted", isLoading);
 });
