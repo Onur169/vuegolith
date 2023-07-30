@@ -6,6 +6,7 @@
           <component :is="tab.content" />
         </template>
       </Tabs>
+      <StatusBar text="Bisher keine Aktion durchgeführt" />
     </div>
   </div>
 </template>
@@ -17,6 +18,7 @@ import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
 import { log } from "./api/api";
+import StatusBar from "./components/StatusBar.vue";
 
 const handleFilesSelected = (files: FileList) => {
   console.log(files);
