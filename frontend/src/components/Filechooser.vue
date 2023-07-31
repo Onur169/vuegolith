@@ -51,9 +51,8 @@ const onFileChange = (event: Event) => {
   emit("files", selectedFiles); // Emit the selectedFiles as an event
 };
 
-watch(reset, (newValue, oldValue) => {
-  console.log("foo", newValue, oldValue);
-  if (newValue || oldValue) {
+watch(reset, (newValue, _) => {
+  if (newValue) {
     resetFileChooser();
   }
 });

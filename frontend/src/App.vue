@@ -38,6 +38,8 @@ const handleFilesSelected = (files: FileList) => {
   if (files.length > 0) {
     const file = files[0];
 
+    shouldResetFileChooser.value = false;
+
     uploadFile(file)
       .then(() => setStatus("Upload erfolgreich"))
       .catch(() => setStatus("Upload nicht erfolgreich"))
@@ -59,7 +61,7 @@ const handleLogButton = () => {
     .finally(() =>
       setTimeout(() => {
         isLoading.value = false;
-      }, 1000)
+      }, 300)
     );
 };
 
