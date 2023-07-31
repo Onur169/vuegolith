@@ -1,7 +1,7 @@
 <template>
   <textarea
     @change="handleChange"
-    class="w-full resize-none h-24 rounded-lg outline-none border-2 border-primary p-4"
+    class="w-full resize-none h-24 rounded-none outline-none border-2 border-primary p-4"
     spellcheck="false"
   ></textarea>
 </template>

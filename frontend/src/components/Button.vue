@@ -1,7 +1,7 @@
 <template>
   <button
     @click="handleClick"
-    class="transition duration-150 rounded-lg border-2 border-primary hover:border-primary hover:bg-secondary active:border-accent focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm font-medium"
+    class="transition duration-150 rounded-none border-2 border-primary hover:border-primary hover:bg-secondary active:border-accent focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm font-medium"
   >
     <svg
       v-if="isLoading"
