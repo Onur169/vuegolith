@@ -13,17 +13,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch, toRefs, onMounted } from "vue";
 
 interface FileChooserProps {
   accept?: string;
   multiple?: boolean;
   disabled?: boolean;
   buttonText?: string;
+  reset?: boolean;
 }
 
-const { accept, multiple, disabled, buttonText }: FileChooserProps =
-  defineProps<FileChooserProps>();
+const props = defineProps<FileChooserProps>();
+
+const { accept, multiple, disabled, buttonText, reset } = toRefs(props);
+
 const emit = defineEmits(["files"]);
 
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -34,6 +37,12 @@ const openFileChooser = () => {
   }
 };
 
+const resetFileChooser = () => {
+  if (fileInput.value) {
+    fileInput.value.value = "";
+  }
+};
+
 const onFileChange = (event: Event) => {
   const inputElement = event.target as HTMLInputElement;
   if (!inputElement.files) return;
@@ -41,6 +50,13 @@ const onFileChange = (event: Event) => {
   const selectedFiles: FileList = inputElement.files;
   emit("files", selectedFiles); // Emit the selectedFiles as an event
 };
+
+watch(reset, (newValue, oldValue) => {
+  console.log("foo", newValue, oldValue);
+  if (newValue || oldValue) {
+    resetFileChooser();
+  }
+});
 </script>
 
 <style scoped lang="postcss">

@@ -40,7 +40,6 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 export interface TabItem {
   name: string;
   id: number;
-  content: JSX.Element;
 }
 
 const { tabs } = defineProps<{
