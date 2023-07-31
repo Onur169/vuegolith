@@ -45,7 +45,7 @@ const onFileChange = (event: Event) => {
 
 <style scoped lang="postcss">
 input[type="file"]::file-selector-button {
-  @apply mr-4 px-4 py-2 border border-primary bg-white shadow cursor-pointer transition duration-200 rounded-none;
+  @apply mr-4 px-4 py-2 border border-primary bg-white shadow cursor-pointer transition duration-150 rounded-none;
 }
 input[type="file"]::file-selector-button:hover {
   @apply hover:bg-secondary;
