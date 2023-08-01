@@ -1,24 +1,29 @@
 <template>
   <textarea
-    @change="handleChange"
+    v-model="content"
     class="w-full resize-none h-24 rounded-none outline-none border-2 border-primary p-4"
     spellcheck="false"
   ></textarea>
 </template>
 <script lang="ts" setup>
-import { onMounted } from "vue";
+import { ref, watch, toRefs } from "vue";
 
-// interface Props {
-//   myProp: any;
-// }
+interface Props {
+  value: string;
+}
 
-// const { myProp } = defineProps<Props>();
+const props = defineProps<Props>();
+const { value } = toRefs(props);
 
-const handleChange = (e: Event) => {
-  console.log(e);
-};
+const content = ref("");
 
-onMounted(() => {
-  console.log("onMounted");
+const emit = defineEmits(["content"]);
+
+watch(content, (newValue, _) => {
+  emit("content", newValue);
+});
+
+watch(value, (newValue, _) => {
+  content.value = newValue;
 });
 </script>

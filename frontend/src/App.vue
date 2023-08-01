@@ -6,16 +6,20 @@
           <template v-if="'upload' === activeTab">
             <Filechooser
               :reset="shouldResetFileChooser"
-              :onFiles="handleFilesSelected"
+              @files="handleFilesSelected"
             />
           </template>
           <template v-if="'log' === activeTab">
-            <Textarea class="mb-4" />
+            <Textarea
+              class="mb-4"
+              @content="handleLogContent"
+              :value="logContent"
+            />
             <Button
               class="mb-4 w-full"
               text="Speichern"
               :isLoading="isLoading"
-              :onClicked="handleLogButton"
+              @clicked="handleLogButton"
             />
           </template>
         </template>
@@ -34,6 +38,10 @@ import Filechooser from "./components/Filechooser.vue";
 import { log, uploadFile } from "./api/api";
 import StatusBar from "./components/StatusBar.vue";
 
+const handleLogContent = (content: string) => {
+  logContent.value = content;
+};
+
 const handleFilesSelected = (files: FileList) => {
   if (files.length > 0) {
     const file = files[0];
@@ -49,14 +57,17 @@ const handleFilesSelected = (files: FileList) => {
 
 const handleLogButton = () => {
   const logData = {
-    message: "Dies ist eine Testmeldung",
+    message: logContent.value,
     timestamp: new Date().toISOString(),
   };
 
   isLoading.value = true;
 
   log(logData)
-    .then(() => setStatus("Log erfolgreich"))
+    .then(() => {
+      setStatus("Log erfolgreich");
+      logContent.value = "";
+    })
     .catch(() => setStatus("Log nicht erfolgreich"))
     .finally(() =>
       setTimeout(() => {
@@ -69,6 +80,8 @@ const setStatus = (msg: string) => {
   lastActionDate.value = new Date();
   statusText.value = msg;
 };
+
+const logContent = ref("");
 
 const isLoading = ref(false);
 
