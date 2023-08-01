@@ -30,7 +30,8 @@ func main() {
 	router := mux.NewRouter()
 
 	// Define API endpoints with Gorilla Mux
-	router.HandleFunc("/api/log", handleLog).Methods("POST")
+	router.HandleFunc("/api/log", handleLogGet).Methods("GET")
+	router.HandleFunc("/api/log", handleLogPost).Methods("POST")
 	router.HandleFunc("/api/upload", handleUpload).Methods("POST")
 
 	// http.Handle("/api/", router)
@@ -80,7 +81,30 @@ func respondJSON(w http.ResponseWriter, status int, data interface{}) {
 	}
 }
 
-func handleLog(w http.ResponseWriter, r *http.Request) {
+func handleLogGet(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	file, err := os.Open("log.txt")
+	if err != nil {
+		http.Error(w, "Failed to read log", http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
+
+	// Read file
+	c, err := io.ReadAll(file)
+	if err != nil {
+		http.Error(w, "Failed to read log content", http.StatusInternalServerError)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, string(c[:]))
+}
+
+func handleLogPost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -102,8 +126,6 @@ func handleLog(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	fmt.Println(string(c))
-
 	// Write the log entry to the file
 	_, err = file.WriteString(string(c[:]) + "\n")
 	if err != nil {
@@ -113,7 +135,6 @@ func handleLog(w http.ResponseWriter, r *http.Request) {
 
 	respondJSON(w, http.StatusOK, nil)
 }
-
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

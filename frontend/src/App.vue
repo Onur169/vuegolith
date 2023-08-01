@@ -35,7 +35,7 @@ import Tabs from "./components/Tabs.vue";
 import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
-import { log, uploadFile } from "./api/api";
+import { logPost, logGet, uploadFile } from "./api/api";
 import StatusBar from "./components/StatusBar.vue";
 
 const handleLogContent = (content: string) => {
@@ -49,7 +49,9 @@ const handleFilesSelected = (files: FileList) => {
     shouldResetFileChooser.value = false;
 
     uploadFile(file)
-      .then(() => setStatus("Upload erfolgreich"))
+      .then(async () => {
+        setStatus("Upload erfolgreich");
+      })
       .catch(() => setStatus("Upload nicht erfolgreich"))
       .finally(() => (shouldResetFileChooser.value = true));
   }
@@ -63,10 +65,18 @@ const handleLogButton = () => {
 
   isLoading.value = true;
 
-  log(logData)
+  logPost(logData)
     .then(() => {
       setStatus("Log erfolgreich");
       logContent.value = "";
+
+      logGet()
+        .then((logData) => {
+          console.log(logData);
+        })
+        .catch(() => {
+          console.log("Log-Read fail");
+        });
     })
     .catch(() => setStatus("Log nicht erfolgreich"))
     .finally(() =>

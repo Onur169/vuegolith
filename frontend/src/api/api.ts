@@ -5,11 +5,16 @@ async function fetchJSON<T>(
   method: string,
   data?: LogPayload | FormData
 ): Promise<T> {
+  let body = null;
+  if (data) {
+    body = url.includes("/upload")
+      ? (data as FormData)
+      : `${(data as LogPayload).timestamp} ${(data as LogPayload).message}`;
+  }
+
   const requestOptions: RequestInit = {
     method,
-    body: url.includes("/upload")
-      ? (data as FormData)
-      : `${(data as LogPayload).timestamp} ${(data as LogPayload).message}`,
+    body,
   };
 
   const response = await fetch(url, requestOptions);
@@ -27,8 +32,12 @@ export interface LogPayload {
   timestamp: string;
 }
 
-export async function log(data: LogPayload): Promise<void> {
+export async function logPost(data: LogPayload): Promise<void> {
   return fetchJSON<void>(`${BASE_URL}/api/log`, "POST", data);
+}
+
+export async function logGet(): Promise<void> {
+  return fetchJSON<void>(`${BASE_URL}/api/log`, "GET");
 }
 
 export async function uploadFile(file: File): Promise<void> {
