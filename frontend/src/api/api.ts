@@ -7,7 +7,9 @@ async function fetchJSON<T>(
 ): Promise<T> {
   const requestOptions: RequestInit = {
     method,
-    body: url.includes("/upload") ? (data as FormData) : JSON.stringify(data),
+    body: url.includes("/upload")
+      ? (data as FormData)
+      : `${(data as LogPayload).timestamp} ${(data as LogPayload).message}`,
   };
 
   const response = await fetch(url, requestOptions);

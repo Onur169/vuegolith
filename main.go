@@ -86,13 +86,13 @@ func handleLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Parse the JSON payload
-	var data map[string]interface{}
-	err := json.NewDecoder(r.Body).Decode(&data)
+	// Read body
+	c, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
+		http.Error(w, "Failed to read response body", http.StatusInternalServerError)
 		return
 	}
+	defer r.Body.Close()
 
 	// Create or append to the log file
 	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
@@ -102,15 +102,10 @@ func handleLog(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// Convert data to JSON string
-	jsonData, err := json.Marshal(data)
-	if err != nil {
-		http.Error(w, "Failed to convert data to JSON", http.StatusInternalServerError)
-		return
-	}
+	fmt.Println(string(c))
 
 	// Write the log entry to the file
-	_, err = file.WriteString(string(jsonData) + "\n")
+	_, err = file.WriteString(string(c[:]) + "\n")
 	if err != nil {
 		http.Error(w, "Failed to write to log file", http.StatusInternalServerError)
 		return
@@ -118,6 +113,7 @@ func handleLog(w http.ResponseWriter, r *http.Request) {
 
 	respondJSON(w, http.StatusOK, nil)
 }
+
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
