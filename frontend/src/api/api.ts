@@ -3,13 +3,11 @@ const BASE_URL = "http://localhost:8080"; // Replace with your server URL
 async function fetchJSON<T>(
   url: string,
   method: string,
-  data?: LogPayload | FormData
+  data?: string | FormData
 ): Promise<T> {
   let body = null;
   if (data) {
-    body = url.includes("/upload")
-      ? (data as FormData)
-      : `${(data as LogPayload).timestamp} ${(data as LogPayload).message}`;
+    body = url.includes("/upload") ? (data as FormData) : (data as string);
   }
 
   const requestOptions: RequestInit = {
@@ -42,7 +40,7 @@ export interface NilResponse {
   data: null;
 }
 
-export async function logPost(data: LogPayload): Promise<NilResponse> {
+export async function logPost(data: string): Promise<NilResponse> {
   return fetchJSON<NilResponse>(`${BASE_URL}/api/log`, "POST", data);
 }
 

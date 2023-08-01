@@ -21,6 +21,9 @@
               :isLoading="isLoading"
               @clicked="handleLogButton"
             />
+            <pre class="max-h-96 border border-primary p-3 overflow-y-scroll">{{
+              splitAndReverse(fetchedLogContent, false).join("\n")
+            }}</pre>
           </template>
         </template>
       </Tabs>
@@ -30,13 +33,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import Tabs from "./components/Tabs.vue";
 import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
 import { logPost, logGet, uploadFile } from "./api/api";
 import StatusBar from "./components/StatusBar.vue";
+
+// reverse macht Sinn bei Logs die appended werden
+// BA muss O_APPEND Flag nutzen beim Log-Post-Call
+const splitAndReverse = (
+  inputString: string,
+  reverse: boolean = true
+): string[] => {
+  const linesArray = inputString.split("\n");
+  const reversed = reverse ? linesArray.reverse() : linesArray;
+  return reversed.filter((item) => item.trim() !== "");
+};
 
 const handleLogContent = (content: string) => {
   logContent.value = content;
@@ -58,14 +72,9 @@ const handleFilesSelected = (files: FileList) => {
 };
 
 const handleLogButton = () => {
-  const logData = {
-    message: logContent.value,
-    timestamp: new Date().toISOString(),
-  };
-
   isLoading.value = true;
 
-  logPost(logData)
+  logPost(logContent.value)
     .then(() => {
       setStatus("Log erfolgreich");
       logContent.value = "";
@@ -110,4 +119,12 @@ const tabs = ref([
     id: 2,
   },
 ]);
+
+onMounted(() => {
+  logGet()
+    .then((logData) => (fetchedLogContent.value = logData.data))
+    .catch(() => {
+      console.log("Log-Read fail");
+    });
+});
 </script>
