@@ -71,9 +71,7 @@ const handleLogButton = () => {
       logContent.value = "";
 
       logGet()
-        .then((logData) => {
-          console.log(logData);
-        })
+        .then((logData) => (fetchedLogContent.value = logData.data))
         .catch(() => {
           console.log("Log-Read fail");
         });
@@ -92,6 +90,7 @@ const setStatus = (msg: string) => {
 };
 
 const logContent = ref("");
+const fetchedLogContent = ref("");
 
 const isLoading = ref(false);
 

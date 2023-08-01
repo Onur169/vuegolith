@@ -32,17 +32,27 @@ export interface LogPayload {
   timestamp: string;
 }
 
-export async function logPost(data: LogPayload): Promise<void> {
-  return fetchJSON<void>(`${BASE_URL}/api/log`, "POST", data);
+export interface LogResponse {
+  ack: string;
+  data: string;
 }
 
-export async function logGet(): Promise<void> {
-  return fetchJSON<void>(`${BASE_URL}/api/log`, "GET");
+export interface NilResponse {
+  ack: string;
+  data: null;
 }
 
-export async function uploadFile(file: File): Promise<void> {
+export async function logPost(data: LogPayload): Promise<NilResponse> {
+  return fetchJSON<NilResponse>(`${BASE_URL}/api/log`, "POST", data);
+}
+
+export async function logGet(): Promise<LogResponse> {
+  return fetchJSON<LogResponse>(`${BASE_URL}/api/log`, "GET");
+}
+
+export async function uploadFile(file: File): Promise<NilResponse> {
   const formData = new FormData();
   formData.append("file", file);
 
-  return fetchJSON<void>(`${BASE_URL}/api/upload`, "POST", formData);
+  return fetchJSON<NilResponse>(`${BASE_URL}/api/upload`, "POST", formData);
 }
