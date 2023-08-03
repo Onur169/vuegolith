@@ -41,10 +41,18 @@ func main() {
 
 	port := "8484"
 	fmt.Println("Server läuft auf http://localhost:" + port)
-	err := http.ListenAndServe(":" + port, nil)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func getHomeDir() (string, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return homeDir, nil
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -88,7 +96,14 @@ func handleLogGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, err := os.Open("log.txt")
+	// Determine Path
+	path, err := getHomeDir()
+	if err != nil {
+		respondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
+		return
+	}
+
+	file, err := os.Open(path + "/log.txt")
 	if err != nil {
 		respondJSON(w, http.StatusInternalServerError, "Failed to read log")
 		return
@@ -119,8 +134,15 @@ func handleLogPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	// Determine Path
+	path, err := getHomeDir()
+	if err != nil {
+		respondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
+		return
+	}
+
 	// Create or append to the log file
-	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	file, err := os.OpenFile(path+"/log.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		respondJSON(w, http.StatusInternalServerError, "Failed to create log file")
 		return
@@ -128,7 +150,7 @@ func handleLogPost(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	// Validate content
-	content := string(c[:]) 
+	content := string(c[:])
 	if strings.TrimSpace(content) == "" {
 		respondJSON(w, http.StatusInternalServerError, "Cannot save empty log")
 		return
