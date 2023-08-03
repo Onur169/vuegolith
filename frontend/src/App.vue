@@ -8,6 +8,13 @@
               :reset="shouldResetFileChooser"
               @files="handleFilesSelected"
             />
+            <hr class="my-6 bg-primary border border-primary"/>
+            <ul v-if="fetchedUploadsList.length > 0">
+              <li class="my-3" v-for="uploadedFileName in fetchedUploadsList">
+               <!-- todo: port austauschen mit ba port -->
+                <a :href="`uploads/${uploadedFileName}`" target="_blank">{{ uploadedFileName }}</a>
+              </li>
+            </ul>
           </template>
           <template v-if="'log' === activeTab">
             <Textarea
@@ -42,7 +49,7 @@ import Tabs, { TabItem } from "./components/Tabs.vue";
 import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
-import { logPost, logGet, uploadFile } from "./api/api";
+import { logPost, logGet, uploadFile, uploadsGet} from "./api/api";
 import StatusBar from "./components/StatusBar.vue";
 import { PencilSquareIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/solid'
 
@@ -105,6 +112,7 @@ const setStatus = (msg: string) => {
 
 const logContent = ref("");
 const fetchedLogContent = ref("");
+const fetchedUploadsList = ref([] as string[])
 
 const isLoading = ref(false);
 
@@ -130,6 +138,14 @@ const tabs = ref([
 onMounted(() => {
   logGet()
     .then((logData) => (fetchedLogContent.value = logData.data))
+    .catch(() => {
+      console.log("Log-Read fail");
+    });
+
+    uploadsGet().then((uploadsList) => {
+      const {data} = uploadsList;
+      fetchedUploadsList.value = data;
+    })
     .catch(() => {
       console.log("Log-Read fail");
     });

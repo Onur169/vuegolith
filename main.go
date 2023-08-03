@@ -20,6 +20,7 @@ type APIResponse struct {
 }
 
 const VUEGOLITH_UPLOADS_DIR = "vuegolith-uploads"
+const UPLOADS_ENDPOINT = "/uploads/"
 
 func main() {
 
@@ -40,9 +41,20 @@ func main() {
 	// Define API endpoints with Gorilla Mux
 	router.HandleFunc("/api/log", handleLogGet).Methods("GET")
 	router.HandleFunc("/api/log", handleLogPost).Methods("POST")
-	router.HandleFunc("/api/upload", handleUpload).Methods("POST")
+	router.HandleFunc("/api/uploads", handleUpload).Methods("POST")
+	router.HandleFunc("/api/uploads", handleListUploads).Methods("GET")
 
-	// http.Handle("/api/", router)
+	// Determine home dir
+	homeDir, err := getHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(homeDir)
+
+	// // Serve files from the home directory under the "/storage/" endpoint
+	fs = http.FileServer(http.Dir(homeDir + "/" + VUEGOLITH_UPLOADS_DIR))
+	http.Handle(UPLOADS_ENDPOINT, http.StripPrefix(UPLOADS_ENDPOINT, fs))
+
 	corsHandler := corsMiddleware(router)
 	http.Handle("/api/", corsHandler)
 
@@ -192,6 +204,36 @@ func handleLogPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusOK, nil)
+}
+
+func handleListUploads(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		respondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
+		return
+	}
+
+	// Determine Path
+	path, err := getHomeDir()
+	if err != nil {
+		respondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
+		return
+	}
+
+	uploadsDir := filepath.Join(path, VUEGOLITH_UPLOADS_DIR)
+
+	// List all files in the uploads directory
+	files, err := os.ReadDir(uploadsDir)
+	if err != nil {
+		respondJSON(w, http.StatusInternalServerError, "Failed to list uploads")
+		return
+	}
+
+	var fileNames []string
+	for _, file := range files {
+		fileNames = append(fileNames, file.Name())
+	}
+
+	respondJSON(w, http.StatusOK, fileNames)
 }
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {

@@ -30,10 +30,18 @@ export interface LogPayload {
   timestamp: string;
 }
 
-export interface LogResponse {
+export interface DataStringResponse {
   ack: string;
   data: string;
 }
+
+export interface DataStringArrResponse {
+  ack: string;
+  data: string[];
+}
+
+export interface LogResponse extends DataStringResponse {}
+export interface UploadResponse extends DataStringArrResponse {}
 
 export interface NilResponse {
   ack: string;
@@ -52,5 +60,9 @@ export async function uploadFile(file: File): Promise<NilResponse> {
   const formData = new FormData();
   formData.append("file", file);
 
-  return fetchJSON<NilResponse>(`${BASE_URL}/api/upload`, "POST", formData);
+  return fetchJSON<NilResponse>(`${BASE_URL}/api/uploads`, "POST", formData);
+}
+
+export async function uploadsGet(): Promise<UploadResponse> {
+  return fetchJSON<UploadResponse>(`${BASE_URL}/api/uploads`, "GET");
 }
