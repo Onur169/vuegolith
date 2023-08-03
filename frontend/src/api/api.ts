@@ -1,4 +1,10 @@
-const BASE_URL = "http://localhost:8484"; // Replace with your server URL
+const BASE_URL = replacePortInURL(`http://${window.location.host}`, "8484"); // Replace with your server URL
+
+function replacePortInURL(url: string, newPort: string): string {
+  const u = new URL(url);
+  u.port = newPort;
+  return u.toString();
+}
 
 async function fetchJSON<T>(
   url: string,
@@ -49,20 +55,20 @@ export interface NilResponse {
 }
 
 export async function logPost(data: string): Promise<NilResponse> {
-  return fetchJSON<NilResponse>(`${BASE_URL}/api/log`, "POST", data);
+  return fetchJSON<NilResponse>(`${BASE_URL}api/log`, "POST", data);
 }
 
 export async function logGet(): Promise<LogResponse> {
-  return fetchJSON<LogResponse>(`${BASE_URL}/api/log`, "GET");
+  return fetchJSON<LogResponse>(`${BASE_URL}api/log`, "GET");
 }
 
 export async function uploadFile(file: File): Promise<NilResponse> {
   const formData = new FormData();
   formData.append("file", file);
 
-  return fetchJSON<NilResponse>(`${BASE_URL}/api/uploads`, "POST", formData);
+  return fetchJSON<NilResponse>(`${BASE_URL}api/uploads`, "POST", formData);
 }
 
 export async function uploadsGet(): Promise<UploadResponse> {
-  return fetchJSON<UploadResponse>(`${BASE_URL}/api/uploads`, "GET");
+  return fetchJSON<UploadResponse>(`${BASE_URL}api/uploads`, "GET");
 }
