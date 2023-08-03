@@ -27,19 +27,24 @@
           </template>
         </template>
       </Tabs>
-      <StatusBar :text="statusText" :logDate="lastActionDate" />
+      <StatusBar :text="statusText" :logDate="lastActionDate">
+        <template v-slot>
+          <InformationCircleIcon class="h-6 w-6 mr-1.5" />
+        </template>
+      </StatusBar>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { onMounted, ref } from "vue";
-import Tabs from "./components/Tabs.vue";
+import Tabs, { TabItem } from "./components/Tabs.vue";
 import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
 import { logPost, logGet, uploadFile } from "./api/api";
 import StatusBar from "./components/StatusBar.vue";
+import { PencilSquareIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/solid'
 
 // reverse macht Sinn bei Logs die appended werden
 // BA muss O_APPEND Flag nutzen beim Log-Post-Call
@@ -111,14 +116,16 @@ const statusText = ref("Bisher keine Aktion durchgeführt");
 
 const tabs = ref([
   {
+    icon: <PencilSquareIcon class="h-6 w-6 mr-1.5" />,
     name: "log",
     id: 1,
   },
   {
+    icon: <CloudArrowUpIcon class="h-6 w-6 mr-1.5" />,
     name: "upload",
     id: 2,
   },
-]);
+] as TabItem[]);
 
 onMounted(() => {
   logGet()

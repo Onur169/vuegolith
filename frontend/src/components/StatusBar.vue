@@ -1,8 +1,8 @@
 <template>
   <div
-    class="w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary p-3 text-center"
+    class="flex flex-row items-center justify-center w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary p-3"
   >
-    {{ computedLogDate }}: {{ text }}
+    <slot></slot> {{ computedLogDate }}: {{ text }}
   </div>
 </template>
 

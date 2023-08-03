@@ -9,14 +9,16 @@
       >
         <button
           :class="[
-            'capitalize w-full select-none rounded-none py-2.5 text-sm font-medium leading-5 focus:outline-none',
+            'flex flex-row items-center justify-center capitalize w-full select-none rounded-none py-2.5 text-sm font-medium leading-5 focus:outline-none',
             selected
               ? 'bg-secondary shadow'
               : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
           ]"
           @click="handleTabBtnClick(tab)"
         >
-          {{ tab.name }}
+          <component :is="tab.icon" v-if="tab.icon && selected" class="text-primary" /> 
+          <component :is="tab.icon" v-if="tab.icon && !selected" class="text-secondary" /> 
+          <span> {{ tab.name }}</span>
         </button>
       </Tab>
     </TabList>
@@ -27,17 +29,17 @@
         :class="['rounded-none bg-white p-1']"
       >
         <slot :tab="tab" :activeTab="activeTab"></slot>
-        <!-- <component :is="tab.content" v-if="activeTab === tab.name" /> -->
       </TabPanel>
     </TabPanels>
   </TabGroup>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ref } from "vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 
 export interface TabItem {
+  icon: JSX.Element;
   name: string;
   id: number;
 }
