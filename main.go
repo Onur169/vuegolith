@@ -39,9 +39,9 @@ func main() {
 	corsHandler := corsMiddleware(router)
 	http.Handle("/api/", corsHandler)
 
-	port := ":8080"
-	fmt.Println("Server läuft auf http://localhost" + port)
-	err := http.ListenAndServe(port, nil)
+	port := "8484"
+	fmt.Println("Server läuft auf http://localhost:" + port)
+	err := http.ListenAndServe(":" + port, nil)
 	if err != nil {
 		panic(err)
 	}

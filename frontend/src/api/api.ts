@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080"; // Replace with your server URL
+const BASE_URL = "http://localhost:8484"; // Replace with your server URL
 
 async function fetchJSON<T>(
   url: string,
