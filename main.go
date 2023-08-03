@@ -84,13 +84,13 @@ func respondJSON(w http.ResponseWriter, status int, data interface{}) {
 
 func handleLogGet(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		respondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 
 	file, err := os.Open("log.txt")
 	if err != nil {
-		http.Error(w, "Failed to read log", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to read log")
 		return
 	}
 	defer file.Close()
@@ -98,7 +98,7 @@ func handleLogGet(w http.ResponseWriter, r *http.Request) {
 	// Read file
 	c, err := io.ReadAll(file)
 	if err != nil {
-		http.Error(w, "Failed to read log content", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to read log content")
 		return
 	}
 
@@ -107,14 +107,14 @@ func handleLogGet(w http.ResponseWriter, r *http.Request) {
 
 func handleLogPost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		respondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 
 	// Read body
 	c, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Failed to read response body", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to read response body")
 		return
 	}
 	defer r.Body.Close()
@@ -122,7 +122,7 @@ func handleLogPost(w http.ResponseWriter, r *http.Request) {
 	// Create or append to the log file
 	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
-		http.Error(w, "Failed to create log file", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to create log file")
 		return
 	}
 	defer file.Close()
@@ -130,13 +130,14 @@ func handleLogPost(w http.ResponseWriter, r *http.Request) {
 	// Validate content
 	content := string(c[:]) 
 	if strings.TrimSpace(content) == "" {
-		http.Error(w, "Cannot save empty log", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Cannot save empty log")
+		return
 	}
 
 	// Write the log entry to the file
 	_, err = file.WriteString(string(c[:]) + "\n")
 	if err != nil {
-		http.Error(w, "Failed to write to log file", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to write to log file")
 		return
 	}
 
@@ -145,20 +146,19 @@ func handleLogPost(w http.ResponseWriter, r *http.Request) {
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		respondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 
 	err := r.ParseMultipartForm(10 << 30) // 1GB maximum file size
 	if err != nil {
-		fmt.Print(err.Error())
-		http.Error(w, "Failed to parse form", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to parse form")
 		return
 	}
 
 	file, handler, err := r.FormFile("file")
 	if err != nil {
-		http.Error(w, "Failed to get file from form", http.StatusBadRequest)
+		respondJSON(w, http.StatusBadRequest, "Failed to get file from form")
 		return
 	}
 	defer file.Close()
@@ -166,14 +166,14 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 	// Save the uploaded file to the current directory
 	f, err := os.OpenFile(filepath.Join(".", handler.Filename), os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
-		http.Error(w, "Failed to save file", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to save file")
 		return
 	}
 	defer f.Close()
 
 	_, err = io.Copy(f, file)
 	if err != nil {
-		http.Error(w, "Failed to write file content", http.StatusInternalServerError)
+		respondJSON(w, http.StatusInternalServerError, "Failed to write file content")
 		return
 	}
 
