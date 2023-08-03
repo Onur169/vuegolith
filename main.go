@@ -19,8 +19,15 @@ type APIResponse struct {
 	Data interface{} `json:"data"`
 }
 
+const VUEGOLITH_UPLOADS_DIR = "vuegolith-uploads"
+
 func main() {
-	fmt.Println("Hallo Welt!")
+
+	_, err := createVuegolithUploadsDir()
+	if err != nil {
+		panic(err)
+	}
+
 	assets, _ := ui.Assets()
 
 	// Use the file system to serve static files
@@ -41,7 +48,7 @@ func main() {
 
 	port := "8484"
 	fmt.Println("Server läuft auf http://localhost:" + port)
-	err := http.ListenAndServe(":"+port, nil)
+	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -53,6 +60,27 @@ func getHomeDir() (string, error) {
 		return "", err
 	}
 	return homeDir, nil
+}
+
+func createVuegolithUploadsDir() (string, error) {
+	homeDir, err := getHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	uploadsDir := filepath.Join(homeDir, VUEGOLITH_UPLOADS_DIR)
+
+	// Überprüfe, ob der Ordner bereits existiert
+	_, err = os.Stat(uploadsDir)
+	if os.IsNotExist(err) {
+		// Ordner existiert nicht, also erstellen
+		err = os.Mkdir(uploadsDir, 0755)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return uploadsDir, nil
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -172,7 +200,14 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := r.ParseMultipartForm(10 << 30) // 1GB maximum file size
+	// Determine Path
+	path, err := getHomeDir()
+	if err != nil {
+		respondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
+		return
+	}
+
+	err = r.ParseMultipartForm(10 << 30) // 1GB maximum file size
 	if err != nil {
 		respondJSON(w, http.StatusInternalServerError, "Failed to parse form")
 		return
@@ -186,7 +221,7 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	// Save the uploaded file to the current directory
-	f, err := os.OpenFile(filepath.Join(".", handler.Filename), os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.OpenFile(filepath.Join(path+"/"+VUEGOLITH_UPLOADS_DIR, handler.Filename), os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		respondJSON(w, http.StatusInternalServerError, "Failed to save file")
 		return
