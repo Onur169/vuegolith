@@ -30,11 +30,11 @@
               :isLoading="isLoading"
               @clicked="handleLogButton"
             />
-            <pre
-              class="max-h-96 border border-primary p-3 overflow-y-scroll"
-              @click="handlePreClick"
-              >{{ splitAndReverse(fetchedLogContent, false).join("\n") }}</pre
-            >
+            <CodePreview
+              @clipboardSuccess="handleClipboardSuccess"
+              @clipboardFail="handleClipboardFail"
+              :content="fetchedLogContent"
+            />
           </template>
         </template>
       </Tabs>
@@ -60,26 +60,10 @@ import {
   CloudArrowUpIcon,
   InformationCircleIcon,
 } from "@heroicons/vue/24/solid";
+import CodePreview from "./components/CodePreview.vue";
 
-const handlePreClick = async () => {
-  try {
-    await navigator.clipboard.writeText(fetchedLogContent.value);
-    setStatus("Content copied to clipboard");
-  } catch (err) {
-    setStatus("Failed to copy to clipboard");
-  }
-};
-
-// reverse macht Sinn bei Logs die appended werden
-// BA muss O_APPEND Flag nutzen beim Log-Post-Call
-const splitAndReverse = (
-  inputString: string,
-  reverse: boolean = true
-): string[] => {
-  const linesArray = inputString.split("\n");
-  const reversed = reverse ? linesArray.reverse() : linesArray;
-  return reversed.filter((item) => item.trim() !== "");
-};
+const handleClipboardSuccess = () => setStatus("Erfolgreich kopiert");
+const handleClipboardFail = () => setStatus("Kopieren hat fehlgeschlagen");
 
 const handleLogContent = (content: string) => {
   logContent.value = content;

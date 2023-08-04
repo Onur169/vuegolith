@@ -16,8 +16,16 @@
           ]"
           @click="handleTabBtnClick(tab)"
         >
-          <component :is="tab.icon" v-if="tab.icon && selected" class="text-primary" /> 
-          <component :is="tab.icon" v-if="tab.icon && !selected" class="text-secondary" /> 
+          <component
+            :is="tab.icon"
+            v-if="tab.icon && selected"
+            class="text-primary"
+          />
+          <component
+            :is="tab.icon"
+            v-if="tab.icon && !selected"
+            class="text-secondary"
+          />
           <span> {{ tab.name }}</span>
         </button>
       </Tab>
