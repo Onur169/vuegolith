@@ -8,11 +8,13 @@
               :reset="shouldResetFileChooser"
               @files="handleFilesSelected"
             />
-            <hr class="my-6 bg-primary border border-primary"/>
+            <hr class="my-6 bg-primary border border-primary" />
             <ul v-if="fetchedUploadsList.length > 0">
               <li class="my-3" v-for="uploadedFileName in fetchedUploadsList">
-               <!-- todo: port austauschen mit ba port -->
-                <a :href="`uploads/${uploadedFileName}`" target="_blank">{{ uploadedFileName }}</a>
+                <!-- todo: port austauschen mit ba port -->
+                <a :href="`uploads/${uploadedFileName}`" target="_blank">{{
+                  uploadedFileName
+                }}</a>
               </li>
             </ul>
           </template>
@@ -28,9 +30,11 @@
               :isLoading="isLoading"
               @clicked="handleLogButton"
             />
-            <pre class="max-h-96 border border-primary p-3 overflow-y-scroll">{{
-              splitAndReverse(fetchedLogContent, false).join("\n")
-            }}</pre>
+            <pre
+              class="max-h-96 border border-primary p-3 overflow-y-scroll"
+              @click="handlePreClick"
+              >{{ splitAndReverse(fetchedLogContent, false).join("\n") }}</pre
+            >
           </template>
         </template>
       </Tabs>
@@ -49,9 +53,22 @@ import Tabs, { TabItem } from "./components/Tabs.vue";
 import Textarea from "./components/Textarea.vue";
 import Button from "./components/Button.vue";
 import Filechooser from "./components/Filechooser.vue";
-import { logPost, logGet, uploadFile, uploadsGet} from "./api/api";
+import { logPost, logGet, uploadFile, uploadsGet } from "./api/api";
 import StatusBar from "./components/StatusBar.vue";
-import { PencilSquareIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/solid'
+import {
+  PencilSquareIcon,
+  CloudArrowUpIcon,
+  InformationCircleIcon,
+} from "@heroicons/vue/24/solid";
+
+const handlePreClick = async () => {
+  try {
+    await navigator.clipboard.writeText(fetchedLogContent.value);
+    setStatus("Content copied to clipboard");
+  } catch (err) {
+    setStatus("Failed to copy to clipboard");
+  }
+};
 
 // reverse macht Sinn bei Logs die appended werden
 // BA muss O_APPEND Flag nutzen beim Log-Post-Call
@@ -112,7 +129,7 @@ const setStatus = (msg: string) => {
 
 const logContent = ref("");
 const fetchedLogContent = ref("");
-const fetchedUploadsList = ref([] as string[])
+const fetchedUploadsList = ref([] as string[]);
 
 const isLoading = ref(false);
 
@@ -142,8 +159,9 @@ onMounted(() => {
       console.log("Log-Read fail");
     });
 
-    uploadsGet().then((uploadsList) => {
-      const {data} = uploadsList;
+  uploadsGet()
+    .then((uploadsList) => {
+      const { data } = uploadsList;
       fetchedUploadsList.value = data;
     })
     .catch(() => {
