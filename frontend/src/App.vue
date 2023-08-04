@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
     <div class="flex flex-col justify-center w-full p-6 md:w-3/4">
-      <Tabs :tabs="tabs">
+      <Tabs :tabs="tabs" @changed="handleTabChange">
         <template v-slot:default="{ tab, activeTab }">
           <template v-if="'upload' === activeTab">
             <Filechooser :reset="shouldResetFileChooser" @files="handleFilesSelected" />
@@ -51,6 +51,35 @@ import CodePreview from './components/CodePreview.vue';
 const handleClipboardSuccess = () => setStatus('Erfolgreich kopiert');
 const handleClipboardFail = () => setStatus('Kopieren hat fehlgeschlagen');
 
+const handleLogGet = () => {
+  logGet()
+    .then(logData => (fetchedLogContent.value = logData.data))
+    .catch(() => {
+      setStatus('Log-Read fail');
+    });
+};
+
+const handleUploadGet = () => {
+  uploadsGet()
+    .then(uploadsList => {
+      const { data } = uploadsList;
+      fetchedUploadsList.value = data;
+    })
+    .catch(() => {
+      setStatus('Log-Read fail');
+    });
+};
+
+const handleTabChange = (name: string) => {
+  console.log(name);
+  if (name === 'log') {
+    handleLogGet();
+  }
+  if (name === 'upload') {
+    handleUploadGet();
+  }
+};
+
 const handleLogContent = (content: string) => {
   logContent.value = content;
 };
@@ -64,6 +93,7 @@ const handleFilesSelected = (files: FileList) => {
     uploadFile(file)
       .then(async () => {
         setStatus('Upload erfolgreich');
+        handleUploadGet();
       })
       .catch(() => setStatus('Upload nicht erfolgreich'))
       .finally(() => (shouldResetFileChooser.value = true));
@@ -78,11 +108,7 @@ const handleLogButton = () => {
       setStatus('Log erfolgreich');
       logContent.value = '';
 
-      logGet()
-        .then(logData => (fetchedLogContent.value = logData.data))
-        .catch(() => {
-          console.log('Log-Read fail');
-        });
+      handleLogGet();
     })
     .catch(() => setStatus('Log nicht erfolgreich'))
     .finally(() =>
@@ -121,21 +147,4 @@ const tabs = ref([
     id: 2,
   },
 ] as TabItem[]);
-
-onMounted(() => {
-  logGet()
-    .then(logData => (fetchedLogContent.value = logData.data))
-    .catch(() => {
-      console.log('Log-Read fail');
-    });
-
-  uploadsGet()
-    .then(uploadsList => {
-      const { data } = uploadsList;
-      fetchedUploadsList.value = data;
-    })
-    .catch(() => {
-      console.log('Log-Read fail');
-    });
-});
 </script>
