@@ -1,10 +1,12 @@
 <template>
-  <pre class="max-h-96 border border-primary p-3 overflow-y-scroll" @click="handleClick">{{
-    splitAndReverse(content, false).join('\n')
-  }}</pre>
+  <pre
+    class="max-h-96 border-2 border-dashed border-primary p-3 overflow-y-scroll"
+    @click="handleClick"
+    >{{ splitAndReverse(content, false).join('\n') }}</pre
+  >
 </template>
 <script lang="ts" setup>
-import { onMounted, toRefs } from 'vue';
+import { toRefs } from 'vue';
 
 interface Props {
   content: string;
