@@ -1,8 +1,11 @@
 <template>
   <div class="relative">
-    <pre class="max-h-96 border-2 border-dashed border-primary p-3 overflow-y-scroll">{{
-      splitAndReverse(content, false).join('\n')
-    }}</pre>
+    <pre
+      ref="preElement"
+      @click="selectText()"
+      class="max-h-96 border-2 border-dashed border-primary p-3 overflow-y-scroll"
+      >{{ splitAndReverse(content, false).join('\n') }}</pre
+    >
     <template v-if="isHovering && !hasCopied">
       <ClipboardIconSolid
         class="absolute h-6 w-6 top-3 right-3 cursor-pointer"
@@ -40,6 +43,8 @@ const isHovering = ref(false);
 
 const hasCopied = ref(false);
 
+const preElement = ref<HTMLPreElement | null>(null);
+
 // reverse macht Sinn bei Logs die appended werden
 // BA muss O_APPEND Flag nutzen beim Log-Post-Call
 const splitAndReverse = (inputString: string, reverse: boolean = true): string[] => {
@@ -56,6 +61,18 @@ const handleClick = async () => {
   } catch (err) {
     emit('clipboardFail');
     hasCopied.value = false;
+  }
+};
+
+const selectText = () => {
+  if (preElement.value) {
+    const range = document.createRange();
+    range.selectNode(preElement.value);
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
   }
 };
 
