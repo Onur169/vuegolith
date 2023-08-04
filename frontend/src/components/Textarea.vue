@@ -6,7 +6,7 @@
   ></textarea>
 </template>
 <script lang="ts" setup>
-import { ref, watch, toRefs } from "vue";
+import { ref, watch, toRefs } from 'vue';
 
 interface Props {
   value: string;
@@ -15,12 +15,12 @@ interface Props {
 const props = defineProps<Props>();
 const { value } = toRefs(props);
 
-const content = ref("");
+const content = ref('');
 
-const emit = defineEmits(["content"]);
+const emit = defineEmits(['content']);
 
 watch(content, (newValue, _) => {
-  emit("content", newValue);
+  emit('content', newValue);
 });
 
 watch(value, (newValue, _) => {

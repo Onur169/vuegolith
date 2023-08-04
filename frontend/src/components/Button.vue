@@ -31,7 +31,7 @@ interface Props {
 
 const { isLoading } = defineProps<Props>();
 
-const emit = defineEmits(["clicked"]);
+const emit = defineEmits(['clicked']);
 
-const handleClick = () => emit("clicked");
+const handleClick = () => emit('clicked');
 </script>
