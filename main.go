@@ -22,50 +22,6 @@ type APIResponse struct {
 const VUEGOLITH_UPLOADS_DIR = "vuegolith-uploads"
 const UPLOADS_ENDPOINT = "/uploads/"
 
-func main() {
-
-	_, err := createVuegolithUploadsDir()
-	if err != nil {
-		panic(err)
-	}
-
-	assets, _ := ui.Assets()
-
-	// Use the file system to serve static files
-	fs := http.FileServer(http.FS(assets))
-	http.Handle("/", http.StripPrefix("/", fs))
-
-	// Create a new Router from Gorilla Mux
-	router := mux.NewRouter()
-
-	// Define API endpoints with Gorilla Mux
-	router.HandleFunc("/api/log", handleLogGet).Methods("GET")
-	router.HandleFunc("/api/log", handleLogPost).Methods("POST")
-	router.HandleFunc("/api/uploads", handleUpload).Methods("POST")
-	router.HandleFunc("/api/uploads", handleListUploads).Methods("GET")
-
-	// Determine home dir
-	homeDir, err := getHomeDir()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(homeDir)
-
-	// // Serve files from the home directory under the "/storage/" endpoint
-	fs = http.FileServer(http.Dir(homeDir + "/" + VUEGOLITH_UPLOADS_DIR))
-	http.Handle(UPLOADS_ENDPOINT, http.StripPrefix(UPLOADS_ENDPOINT, fs))
-
-	corsHandler := corsMiddleware(router)
-	http.Handle("/api/", corsHandler)
-
-	port := "8484"
-	fmt.Println("Server läuft auf http://localhost:" + port)
-	err = http.ListenAndServe(":"+port, nil)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func getHomeDir() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -277,4 +233,53 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusOK, nil)
+}
+
+func main() {
+
+	_, err := createVuegolithUploadsDir()
+	if err != nil {
+		panic(err)
+	}
+
+	assets, _ := ui.Assets()
+
+	// Use the file system to serve static files
+	fs := http.FileServer(http.FS(assets))
+	http.Handle("/", http.StripPrefix("/", fs))
+
+	// Create a new Router from Gorilla Mux
+	router := mux.NewRouter()
+
+	// Define API endpoints with Gorilla Mux
+	router.HandleFunc("/api/log", handleLogGet).Methods("GET")
+	router.HandleFunc("/api/log", handleLogPost).Methods("POST")
+	router.HandleFunc("/api/uploads", handleUpload).Methods("POST")
+	router.HandleFunc("/api/uploads", handleListUploads).Methods("GET")
+
+	// Determine home dir
+	homeDir, err := getHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(homeDir)
+
+	// // Serve files from the home directory under the "/storage/" endpoint
+	fs = http.FileServer(http.Dir(homeDir + "/" + VUEGOLITH_UPLOADS_DIR))
+	http.Handle(UPLOADS_ENDPOINT, http.StripPrefix(UPLOADS_ENDPOINT, fs))
+
+	corsHandler := corsMiddleware(router)
+	http.Handle("/api/", corsHandler)
+
+	// Pfade zu deinen selbstsignierten Zertifikatsdateien
+	// port := "8484"
+
+	//err = http.ListenAndServe(":"+port, nil)
+	certFile := "server.crt"
+	keyFile := "server.key"
+	err = http.ListenAndServeTLS(":443", certFile, keyFile, nil)
+	if err != nil {
+		panic(err)
+	}
+
 }

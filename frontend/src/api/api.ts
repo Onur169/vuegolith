@@ -1,4 +1,8 @@
-const BASE_URL = replacePortInURL(`http://${window.location.host}`, "8484"); // Replace with your server URL
+const useSecureLocalDomain = true;
+const BASE_URL = replacePortInURL(
+  useSecureLocalDomain ? `https://vuegolith.local/` : `http://${window.location.host}`,
+  useSecureLocalDomain ? '' : '8484',
+);
 
 function replacePortInURL(url: string, newPort: string): string {
   const u = new URL(url);
@@ -6,14 +10,10 @@ function replacePortInURL(url: string, newPort: string): string {
   return u.toString();
 }
 
-async function fetchJSON<T>(
-  url: string,
-  method: string,
-  data?: string | FormData
-): Promise<T> {
+async function fetchJSON<T>(url: string, method: string, data?: string | FormData): Promise<T> {
   let body = null;
   if (data) {
-    body = url.includes("/upload") ? (data as FormData) : (data as string);
+    body = url.includes('/upload') ? (data as FormData) : (data as string);
   }
 
   const requestOptions: RequestInit = {
@@ -25,7 +25,7 @@ async function fetchJSON<T>(
   const responseData = await response.json();
 
   if (!response.ok) {
-    throw new Error(responseData.error || "Something went wrong");
+    throw new Error(responseData.error || 'Something went wrong');
   }
 
   return responseData;
@@ -55,20 +55,20 @@ export interface NilResponse {
 }
 
 export async function logPost(data: string): Promise<NilResponse> {
-  return fetchJSON<NilResponse>(`${BASE_URL}api/log`, "POST", data);
+  return fetchJSON<NilResponse>(`${BASE_URL}api/log`, 'POST', data);
 }
 
 export async function logGet(): Promise<LogResponse> {
-  return fetchJSON<LogResponse>(`${BASE_URL}api/log`, "GET");
+  return fetchJSON<LogResponse>(`${BASE_URL}api/log`, 'GET');
 }
 
 export async function uploadFile(file: File): Promise<NilResponse> {
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append('file', file);
 
-  return fetchJSON<NilResponse>(`${BASE_URL}api/uploads`, "POST", formData);
+  return fetchJSON<NilResponse>(`${BASE_URL}api/uploads`, 'POST', formData);
 }
 
 export async function uploadsGet(): Promise<UploadResponse> {
-  return fetchJSON<UploadResponse>(`${BASE_URL}api/uploads`, "GET");
+  return fetchJSON<UploadResponse>(`${BASE_URL}api/uploads`, 'GET');
 }
