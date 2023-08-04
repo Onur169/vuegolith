@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="tsx">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
 import Button from './components/Button.vue';
