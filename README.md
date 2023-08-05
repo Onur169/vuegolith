@@ -47,24 +47,77 @@ The frontend of Vuegolith is built using Vue.js and Vite. It is located in the `
 
 Here is a quick overview of the scripts available in the `package.json` file:
 
-- `dev`: Starts the frontend development server.
-- `build`: Builds the frontend and moves the output to the `ui/dist` directory.
-- `preview`: Previews the built frontend locally.
-- `boilerplate`: Execute "npm run boilerplate ComponentName" to generate a Vue.js component with the specified name in the "components" directory.
-- `format`: Formats Vue files using Prettier.
-- `eslint`: Runs ESLint for linting TypeScript and Vue files.
-- `publish`: Publishes the frontend and backend as a single executable to `/usr/local/bin/vuegolith` (make sure to run this script with elevated permissions using `sudo`).
+- `dev`: Starts the frontend development server using Vite with the `dev` mode. This is used during development to test and hot-reload changes.
 
-### Recommended NPM Commands
+- `prod`: Builds the frontend in production mode using Vite with the `prod` mode. This is used to generate optimized and minified assets for production deployment.
 
-When working on the frontend, it is essential to execute the npm commands from within the `frontend` directory. For example:
+- `build`: Executes the `build.sh` shell script, responsible for building the frontend and moving the output to the `ui/dist` directory. It compiles TypeScript files, generates production-ready assets, and prepares the application for deployment.
 
-- To install new dependencies: `npm install <package-name>`
-- To run the development server: `npm run dev`
-- To build the frontend: `npm run build`
-- To preview the built frontend: `npm run preview`
+- `publish`: Executes the `publish.sh` shell script, responsible for building and packaging the frontend and backend as a single executable. It creates an executable file named `vuegolith` and moves it to `/usr/local/bin/vuegolith`. The script also copies SSL certificate files (`server.key` and `server.crt`) to `/etc/vuegolith/ssl/`. It's important to run this script with elevated permissions using `sudo`.
 
-Remember not to execute `npm install` in the root directory. Doing so will install dependencies at the project root, which is not recommended.
+- `publish-dev`: Sets the `VITE_ENV` environment variable to `dev` and then runs the `publish` script, which packages the application for development deployment.
+
+- `publish-prod`: Sets the `VITE_ENV` environment variable to `prod` and then runs the `publish` script, which packages the application for production deployment.
+
+- `build-dev`: Sets the `VITE_ENV` environment variable to `dev` and then runs the `build` script, which generates frontend assets in development mode.
+
+- `build-prod`: Sets the `VITE_ENV` environment variable to `prod` and then runs the `build` script, which generates optimized frontend assets for production.
+
+- `preview`: Previews the built frontend locally using Vite's preview feature. This allows you to test the production-ready assets locally before deploying them.
+
+- `boilerplate`: Executes the `boilerplate.cjs` Node.js script to generate a new Vue.js component with the specified name in the "components" directory. To create a new component, you can use `npm run boilerplate ComponentName`.
+
+- `format`: Formats Vue files using Prettier, ensuring consistent and standardized code formatting.
+
+- `eslint`: Runs ESLint on TypeScript and Vue files, identifying potential code errors and enforcing coding standards.
+
+### Using secure and unsecure webserver while development
+
+To start local development, use the following commands based on your desired configuration:
+
+1. **Unsecure Local Domain (HTTP)**:
+
+   ```bash
+   npm run dev
+   ```
+
+   This will start the frontend development server on `http://localhost:1234` with hot reloading. The development environment uses the `.env.dev` file, which is set to `VITE_USE_SECURE_LOCAL_DOMAIN=false`. This means you'll be running an unsecure HTTP web server during development by executing `go run main.go --secure=false`.
+
+2. **Secure Local Domain (HTTPS)**:
+   ```bash
+   npm run prod
+   ```
+   This command starts the frontend development server on `https://localhost:1234` with hot reloading. The development environment uses the `.env.prod` file, which is set to `VITE_USE_SECURE_LOCAL_DOMAIN=true`. As a result, you'll be running a secure HTTPS web server during development by executing `go run main.go --secure=true`.
+
+#### Publishing Vuegolith
+
+When you are ready to publish your Vuegolith application, use the following scripts:
+
+- **Publish for Development**:
+
+  ```bash
+  npm run publish-dev
+  ```
+
+  This script builds and publishes the frontend and backend as a single executable, `vuegolith`, to `/usr/local/bin/`. The Vuegolith executable will use the development environment settings, and you can start it with the `--secure=true` or `--secure=false` flag as needed.
+
+- **Publish for Production**:
+  ```bash
+  npm run publish-prod
+  ```
+  This script builds and publishes the frontend and backend as a single executable, `vuegolith`, to `/usr/local/bin/`. The Vuegolith executable will use the production environment settings, and you can start it with the `--secure=true` or `--secure=false` flag based on your deployment requirements.
+
+With the published Vuegolith executable, you can easily run your application using `vuegolith --secure=true` for a secure HTTPS server or `vuegolith --secure=false` for an unsecure HTTP server. The Vuegolith command is now available globally, allowing you to access your application from anywhere in the console.
+
+#### SSL Note
+
+The "browser's trusted certificate store" refers to a collection of trusted root certificates that your web browser uses to validate the authenticity of SSL/TLS certificates presented by websites. These root certificates are issued by trusted Certificate Authorities (CAs) and are pre-installed in your browser or operating system.
+
+When you access a website over HTTPS, the server presents its SSL/TLS certificate to your browser. Your browser then checks if the certificate is signed by a trusted root certificate. If it is, the browser considers the connection secure and displays a padlock icon or similar indicator to signify that the website is safe to use.
+
+However, when you use a self-signed SSL certificate, like in local development scenarios, the certificate is not issued by a recognized Certificate Authority, so it is not automatically trusted by your browser. As a result, when you access a website using a self-signed certificate, your browser will display a security warning or error.
+
+To avoid these warnings and make your browser trust the self-signed certificate used in local development, you can manually import the certificate into your browser's trusted certificate store. On macOS, you can use the Keychain Access application (Schlüsselbundverwaltung) to import the certificate.
 
 ## Conclusion
 

@@ -1,5 +1,4 @@
 const useSecureLocalDomain = import.meta.env.VITE_USE_SECURE_LOCAL_DOMAIN === 'true';
-console.log(`useSecureLocalDomain = ${useSecureLocalDomain}`);
 const BASE_URL = replacePortInURL(
   useSecureLocalDomain ? `https://vuegolith.local/` : `http://${window.location.host}`,
   useSecureLocalDomain ? '' : '8484',
