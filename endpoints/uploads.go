@@ -11,7 +11,8 @@ import (
 )
 
 type UploadsList struct {
-	Name string `json:"name"`
+	Name  string `json:"name"`
+	IsDir bool   `json:"isDir"`
 }
 
 func HandleListUploads(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +39,10 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 
 	var fileNames []UploadsList
 	for _, file := range files {
-		fileNames = append(fileNames, UploadsList{Name: file.Name()})
+		fileNames = append(fileNames, UploadsList{
+			Name: file.Name(), 
+			IsDir: file.IsDir(),
+		})
 	}
 
 	api.RespondJSON(w, http.StatusOK, fileNames)

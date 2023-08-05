@@ -6,11 +6,34 @@
           <template v-if="'upload' === activeTab">
             <Filechooser :reset="shouldResetFileChooser" @files="handleFilesSelected" />
             <hr class="my-6 bg-primary border border-primary" />
-            <ul v-if="fetchedUploadsList.length > 0">
-              <li class="my-3" v-for="uploadedFile in fetchedUploadsList">
-                <a :href="`uploads/${uploadedFile.name}`" target="_blank">{{
+            <ul class="flex flex-col" v-if="fetchedUploadsList.length > 0">
+              <li
+                class="flex flex-row justify-between my-3"
+                v-for="(uploadedFile, index) in fetchedUploadsList"
+                :key="index"
+              >
+                <a :href="`${baseUrl}uploads/${uploadedFile.name}`" target="_blank">{{
                   uploadedFile.name
                 }}</a>
+                <div class="flex flex-row gap-x-3">
+                  <template v-if="!isHovering[index]">
+                    <ArrowDownOnSquareIconSolid
+                      class="h-6 w-6 cursor-pointer"
+                      @mouseenter="handleHover(index, true)"
+                      @mouseleave="handleHover(index, false)"
+                    />
+                  </template>
+                  <template v-else>
+                    <ArrowDownOnSquareIcon
+                      class="h-6 w-6 cursor-pointer"
+                      @click="handleDownload(`${baseUrl}uploads/${uploadedFile.name}`)"
+                      @mouseenter="handleHover(index, true)"
+                      @mouseleave="handleHover(index, false)"
+                    />
+                  </template>
+
+                  <!-- <TrashIcon class="h-6 w-6" /> -->
+                </div>
               </li>
             </ul>
           </template>
@@ -45,9 +68,19 @@ import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
 import Button from './components/Button.vue';
 import Filechooser from './components/Filechooser.vue';
-import { logPost, logGet, uploadFile, uploadsGet, UploadFile } from './api/api';
+import { logPost, logGet, uploadFile, uploadsGet, UploadFile, baseUrl } from './api/api';
 import StatusBar from './components/StatusBar.vue';
-import { PencilSquareIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/solid';
+import {
+  PencilSquareIcon,
+  CloudArrowUpIcon,
+  InformationCircleIcon,
+  ArrowDownOnSquareIcon,
+  TrashIcon,
+} from '@heroicons/vue/24/solid';
+import {
+  ArrowDownOnSquareIcon as ArrowDownOnSquareIconSolid,
+  TrashIcon as TrashIconSolid,
+} from '@heroicons/vue/24/outline';
 import CodePreview from './components/CodePreview.vue';
 
 const handleClipboardSuccess = () => setStatus('Erfolgreich kopiert');
@@ -120,6 +153,10 @@ const handleLogButton = () => {
     );
 };
 
+const handleDownload = (path: string) => {
+  window.open(path, '_blank');
+};
+
 const setStatus = (msg: string) => {
   lastActionDate.value = new Date();
   statusText.value = msg;
@@ -128,6 +165,13 @@ const setStatus = (msg: string) => {
 const logContent = ref('');
 const fetchedLogContent = ref('');
 const fetchedUploadsList = ref([] as UploadFile[]);
+
+const isHovering = ref(Array(fetchedUploadsList.value.length).fill(false));
+const handleHover = (index: number, hovering: boolean) => {
+  const arr = isHovering.value;
+  arr[index] = hovering;
+  isHovering.value = arr;
+};
 
 const isLoading = ref(false);
 
