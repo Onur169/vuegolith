@@ -50,7 +50,7 @@ Here is a quick overview of the scripts available in the `package.json` file:
 - `dev`: Starts the frontend development server.
 - `build`: Builds the frontend and moves the output to the `ui/dist` directory.
 - `preview`: Previews the built frontend locally.
-- `boilerplate`: (Optional) Runs a Node.js script for boilerplate generation (you may provide more details about this if needed).
+- `boilerplate`: Execute "npm run boilerplate ComponentName" to generate a Vue.js component with the specified name in the "components" directory.
 - `format`: Formats Vue files using Prettier.
 - `eslint`: Runs ESLint for linting TypeScript and Vue files.
 - `publish`: Publishes the frontend and backend as a single executable to `/usr/local/bin/vuegolith` (make sure to run this script with elevated permissions using `sudo`).
