@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -16,6 +17,9 @@ import (
 const INSTALLED_PATH = "/usr/local/bin/vuegolith"
 
 func main() {
+	var isSecure bool
+	flag.BoolVar(&isSecure, "secure", true, "Set to true for secure mode")
+	flag.Parse()
 
 	intro := `🧑‍💻️ Welcome to Vuegolith`
 
@@ -64,13 +68,27 @@ func main() {
 	//err = http.ListenAndServe(":"+port, nil)
 	certFile := "/etc/vuegolith/ssl/server.crt"
 	keyFile := "/etc/vuegolith/ssl/server.key"
+	port := "8484"
+	securePort := "443"
+
+	var servedUrl string
+	if isSecure {
+		servedUrl = "https://vuegolith.local/"
+	} else {
+		servedUrl = "http://localhost:" + port
+	}
 
 	fmt.Println(intro)
-	fmt.Println("Webserver has started and is available on https://vuegolith.local/")
+	fmt.Println("Webserver has started and is available on " + servedUrl)
 	fmt.Print("")
 	fmt.Println("Exec Directory: " + wd)
 
-	err = http.ListenAndServeTLS(":443", certFile, keyFile, nil)
+	if isSecure {
+		err = http.ListenAndServeTLS(":" + securePort, certFile, keyFile, nil)
+	} else {
+		err = http.ListenAndServe(":" + port, nil)
+	}
+
 	if err != nil {
 		panic(err)
 	}
