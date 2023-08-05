@@ -10,7 +10,7 @@
     "boilerplate": "node boilerplate.cjs",
     "format": "prettier --write \"src/**/*.vue\"",
     "eslint": "eslint \"src/**/*.{ts,vue}\"",
-    "publish": "npm run build; cd ../; go build; pwd; mv vuegolith $HOME/Desktop/vuegolith"
+    "publish": "npm run build; cd ../; go build; pwd; sudo mv vuegolith /usr/local/bin/vuegolith; sudo cp server.key /etc/vuegolith/ssl/server.key; sudo cp server.crt /etc/vuegolith/ssl/server.crt"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.14",

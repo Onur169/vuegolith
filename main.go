@@ -21,6 +21,7 @@ type APIResponse struct {
 
 const VUEGOLITH_UPLOADS_DIR = "vuegolith-uploads"
 const UPLOADS_ENDPOINT = "/uploads/"
+const INSTALLED_PATH = "/usr/local/bin/vuegolith"
 
 func getHomeDir() (string, error) {
 	homeDir, err := os.UserHomeDir()
@@ -237,7 +238,15 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	_, err := createVuegolithUploadsDir()
+	intro := `🧑‍💻️ Welcome to Vuegolith`
+
+	// wd, err := os.Getwd()
+	wd, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = createVuegolithUploadsDir()
 	if err != nil {
 		panic(err)
 	}
@@ -262,7 +271,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(homeDir)
 
 	// // Serve files from the home directory under the "/storage/" endpoint
 	fs = http.FileServer(http.Dir(homeDir + "/" + VUEGOLITH_UPLOADS_DIR))
@@ -275,8 +283,14 @@ func main() {
 	// port := "8484"
 
 	//err = http.ListenAndServe(":"+port, nil)
-	certFile := "server.crt"
-	keyFile := "server.key"
+	certFile := "/etc/vuegolith/ssl/server.crt"
+	keyFile := "/etc/vuegolith/ssl/server.key"
+
+	fmt.Println(intro)
+	fmt.Println("Webserver has started and is available on https://vuegolith.local/")
+	fmt.Print("")
+	fmt.Println("Exec Directory: " + wd)
+
 	err = http.ListenAndServeTLS(":443", certFile, keyFile, nil)
 	if err != nil {
 		panic(err)
