@@ -22,3 +22,8 @@ func CorsMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func FileServerWithCors(dir http.Dir) http.Handler {
+	fs := http.FileServer(dir)
+	return CorsMiddleware(fs)
+}

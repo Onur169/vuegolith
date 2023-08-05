@@ -5,6 +5,7 @@ export const baseUrl = replacePortInURL(
 );
 
 // todo: fetchJSON refactoren und in kleinere Module aufteilen
+// In der App.vue müssen die promises auf ack === "success" checken für den erfolg
 
 export function replacePortInURL(url: string, newPort: string): string {
   const u = new URL(url);

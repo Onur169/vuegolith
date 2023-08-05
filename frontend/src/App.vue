@@ -6,7 +6,7 @@
           <template v-if="'upload' === activeTab">
             <Filechooser :reset="shouldResetFileChooser" @files="handleFilesSelected" />
             <hr class="my-6 bg-primary border border-primary" />
-            <ul class="flex flex-col" v-if="fetchedUploadsList.length > 0">
+            <ul class="flex flex-col" v-if="fetchedUploadsList?.length > 0">
               <li
                 class="flex flex-row justify-between my-3"
                 v-for="(uploadedFile, index) in fetchedUploadsList"
@@ -26,7 +26,9 @@
                   <template v-else>
                     <ArrowDownOnSquareIcon
                       class="h-6 w-6 cursor-pointer"
-                      @click="handleDownload(`${baseUrl}uploads/${uploadedFile.name}`)"
+                      @click="
+                        handleDownload(`${baseUrl}uploads/${uploadedFile.name}`, uploadFile.name)
+                      "
                       @mouseenter="handleIsHoverDownloadIcon(index, true)"
                       @mouseleave="handleIsHoverDownloadIcon(index, false)"
                     />
@@ -178,19 +180,44 @@ const handleLogButton = () => {
     );
 };
 
-const handleDownload = (path: string) => {
-  window.open(path, '_blank');
+const handleDownload = async (path: string, fileName: string) => {
+  try {
+    const response = await fetch(path);
+
+    if (!response.ok) {
+      throw new Error(
+        `Fehler beim Herunterladen der Datei. Status: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+
+    // Nach dem Download die URL des Blobs wieder freigeben
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Fehler beim Herunterladen der Datei:', error);
+  }
 };
 
 const handleDelete = (fileName: string) => {
-  uploadsDelete({ file: fileName } as UploadsPayload)
-    .then(res => {
-      if (res.ack === 'success') {
-        setStatus(`${fileName} erfolgreich gelöscht`);
-        handleUploadGet();
-      }
-    })
-    .catch(() => setStatus(`${fileName} konnte nicht gelöscht werden`));
+  const res = confirm(`${fileName} wirklich löschen?`);
+  if (res) {
+    uploadsDelete({ file: fileName } as UploadsPayload)
+      .then(res => {
+        if (res.ack === 'success') {
+          setStatus(`${fileName} erfolgreich gelöscht`);
+          handleUploadGet();
+        }
+      })
+      .catch(() => setStatus(`${fileName} konnte nicht gelöscht werden`));
+  }
 };
 
 const setStatus = (msg: string) => {
@@ -201,6 +228,9 @@ const setStatus = (msg: string) => {
 const logContent = ref('');
 const fetchedLogContent = ref('');
 const fetchedUploadsList = ref([] as UploadFile[]);
+
+// Array(fetchedUploadsList.value.length).fill(false)... lieberi onMounted
+// length check durchführen, da in prod bei keinen uploads die seite nicht korrekt gerendert wird
 
 const isHoveringDownloadIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
 const handleIsHoverDownloadIcon = (index: number, hovering: boolean) => {

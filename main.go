@@ -57,7 +57,7 @@ func main() {
 	}
 
 	// // Serve files from the home directory under the "/uploads/" endpoint
-	fs = http.FileServer(http.Dir(homeDir + "/" + utils.GetUploadsDirName()))
+	fs = api.FileServerWithCors(http.Dir(homeDir + "/" + utils.GetUploadsDirName()))
 	http.Handle("/uploads/", http.StripPrefix("/uploads/", fs))
 
 	corsHandler := api.CorsMiddleware(router)
