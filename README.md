@@ -109,6 +109,20 @@ When you are ready to publish your Vuegolith application, use the following scri
 
 With the published Vuegolith executable, you can easily run your application using `vuegolith --secure=true` for a secure HTTPS server or `vuegolith --secure=false` for an unsecure HTTP server. The Vuegolith command is now available globally, allowing you to access your application from anywhere in the console.
 
+### vuegolith.local Note
+
+To access the secure local domain vuegolith.local, you need to add an entry to your system's hosts file. You can do this by running the following command in the terminal:
+
+```bash
+sudo nano /etc/hosts
+```
+
+Then, add the following line at the end of the file:
+
+```bash
+127.0.0.1    vuegolith.local
+```
+
 #### SSL Note
 
 The "browser's trusted certificate store" refers to a collection of trusted root certificates that your web browser uses to validate the authenticity of SSL/TLS certificates presented by websites. These root certificates are issued by trusted Certificate Authorities (CAs) and are pre-installed in your browser or operating system.
