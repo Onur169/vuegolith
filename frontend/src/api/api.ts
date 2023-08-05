@@ -67,6 +67,8 @@ export interface DataArrResponse<T> {
 
 export interface UploadFile {
   name: string;
+  size: number;
+  isDir: boolean;
 }
 
 export interface LogResponse extends DataStringResponse {}

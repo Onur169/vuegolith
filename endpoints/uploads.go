@@ -14,6 +14,7 @@ import (
 type UploadsList struct {
 	Name  string `json:"name"`
 	IsDir bool   `json:"isDir"`
+	Size int64   `json:"size"`
 }
 
 func HandleListUploads(w http.ResponseWriter, r *http.Request) {
@@ -40,9 +41,18 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 
 	var fileNames []UploadsList
 	for _, file := range files {
+		fileInfo, err := file.Info()
+		var size int64;
+		if err != nil {
+            size = -1
+        } else {
+			size = fileInfo.Size()
+		}
+
 		fileNames = append(fileNames, UploadsList{
 			Name: file.Name(), 
 			IsDir: file.IsDir(),
+			Size: size,
 		})
 	}
 
@@ -54,8 +64,6 @@ type DeletePayload struct {
 }
 
 func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
-	// 
-
 	if r.Method != http.MethodDelete {
 		api.RespondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
@@ -70,7 +78,7 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filename := payload.File
-	
+
 	if(!utils.IsPathSafe(filename)) {
 		api.RespondJSON(w, http.StatusBadRequest, "Path is not safe")
 		return
