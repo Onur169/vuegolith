@@ -8,12 +8,9 @@ Welcome to Vuegolith! This project combines a backend web server built with Go a
 
 ## Technologies Used
 
-<div style="display:flex; flex-direction: row">
-    <img src="assets/ts-logo.svg" alt="TypeScript Logo" width="100" height="100" style="margin-right:2rem">
-    <img src="assets/vue-logo.svg" alt="Vue.js Logo" width="100" height="100" style="margin-right:2rem">
-    <img src="assets/tailwind-logo.svg" alt="Tailwind CSS Logo" width="100" height="100" style="margin-right:2rem">
-    <img src="assets/go-logo.svg" alt="Go Logo" width="100" height="100" />
-</div>
+| TypeScript                                                                    | Vue.js                                                                     | Tailwind CSS                                                                          | Go                                                                      |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| <img src="assets/ts-logo.svg" alt="TypeScript Logo" width="100" height="100"> | <img src="assets/vue-logo.svg" alt="Vue.js Logo" width="100" height="100"> | <img src="assets/tailwind-logo.svg" alt="Tailwind CSS Logo" width="100" height="100"> | <img src="assets/go-logo.svg" alt="Go Logo" width="100" height="100" /> |
 
 ## Getting Started
 
