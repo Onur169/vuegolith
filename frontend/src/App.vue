@@ -16,19 +16,35 @@
                   uploadedFile.name
                 }}</a>
                 <div class="flex flex-row gap-x-3">
-                  <template v-if="!isHovering[index]">
+                  <template v-if="!isHoveringDownloadIcon[index]">
                     <ArrowDownOnSquareIconSolid
                       class="h-6 w-6 cursor-pointer"
-                      @mouseenter="handleHover(index, true)"
-                      @mouseleave="handleHover(index, false)"
+                      @mouseenter="handleIsHoverDownloadIcon(index, true)"
+                      @mouseleave="handleIsHoverDownloadIcon(index, false)"
                     />
                   </template>
                   <template v-else>
                     <ArrowDownOnSquareIcon
                       class="h-6 w-6 cursor-pointer"
                       @click="handleDownload(`${baseUrl}uploads/${uploadedFile.name}`)"
-                      @mouseenter="handleHover(index, true)"
-                      @mouseleave="handleHover(index, false)"
+                      @mouseenter="handleIsHoverDownloadIcon(index, true)"
+                      @mouseleave="handleIsHoverDownloadIcon(index, false)"
+                    />
+                  </template>
+
+                  <template v-if="!isHoveringTrashIcon[index]">
+                    <TrashIconSolid
+                      class="h-6 w-6 cursor-pointer"
+                      @mouseenter="handleIsHoverTrashIcon(index, true)"
+                      @mouseleave="handleIsHoverTrashIcon(index, false)"
+                    />
+                  </template>
+                  <template v-else>
+                    <TrashIcon
+                      class="h-6 w-6 cursor-pointer"
+                      @click="handleDelete(uploadedFile.name)"
+                      @mouseenter="handleIsHoverTrashIcon(index, true)"
+                      @mouseleave="handleIsHoverTrashIcon(index, false)"
                     />
                   </template>
 
@@ -68,7 +84,16 @@ import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
 import Button from './components/Button.vue';
 import Filechooser from './components/Filechooser.vue';
-import { logPost, logGet, uploadFile, uploadsGet, UploadFile, baseUrl } from './api/api';
+import {
+  logPost,
+  logGet,
+  uploadFile,
+  uploadsGet,
+  UploadFile,
+  baseUrl,
+  uploadsDelete,
+  UploadsPayload,
+} from './api/api';
 import StatusBar from './components/StatusBar.vue';
 import {
   PencilSquareIcon,
@@ -157,6 +182,17 @@ const handleDownload = (path: string) => {
   window.open(path, '_blank');
 };
 
+const handleDelete = (fileName: string) => {
+  uploadsDelete({ file: fileName } as UploadsPayload)
+    .then(res => {
+      if (res.ack === 'success') {
+        setStatus(`${fileName} erfolgreich gelöscht`);
+        handleUploadGet();
+      }
+    })
+    .catch(() => setStatus(`${fileName} konnte nicht gelöscht werden`));
+};
+
 const setStatus = (msg: string) => {
   lastActionDate.value = new Date();
   statusText.value = msg;
@@ -166,11 +202,18 @@ const logContent = ref('');
 const fetchedLogContent = ref('');
 const fetchedUploadsList = ref([] as UploadFile[]);
 
-const isHovering = ref(Array(fetchedUploadsList.value.length).fill(false));
-const handleHover = (index: number, hovering: boolean) => {
-  const arr = isHovering.value;
+const isHoveringDownloadIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
+const handleIsHoverDownloadIcon = (index: number, hovering: boolean) => {
+  const arr = isHoveringDownloadIcon.value;
   arr[index] = hovering;
-  isHovering.value = arr;
+  isHoveringDownloadIcon.value = arr;
+};
+
+const isHoveringTrashIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
+const handleIsHoverTrashIcon = (index: number, hovering: boolean) => {
+  const arr = isHoveringTrashIcon.value;
+  arr[index] = hovering;
+  isHoveringTrashIcon.value = arr;
 };
 
 const isLoading = ref(false);

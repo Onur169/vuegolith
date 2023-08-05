@@ -3,6 +3,7 @@ package utils
 import (
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func GetUploadsDirName() string {
@@ -36,4 +37,8 @@ func CreateVuegolithUploadsDir() (string, error) {
 	}
 
 	return uploadsDir, nil
+}
+
+func IsPathSafe(path string) bool {
+	return !strings.Contains(path, "../")
 }

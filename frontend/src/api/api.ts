@@ -4,20 +4,30 @@ export const baseUrl = replacePortInURL(
   useSecureLocalDomain ? '' : '8484',
 );
 
+// todo: fetchJSON refactoren und in kleinere Module aufteilen
+
 export function replacePortInURL(url: string, newPort: string): string {
   const u = new URL(url);
   u.port = newPort;
   return u.toString();
 }
 
+export interface UploadsPayload {
+  file: string;
+}
+
 export async function fetchJSON<T>(
   url: string,
   method: string,
-  data?: string | FormData,
+  data?: string | FormData | UploadsPayload,
 ): Promise<T> {
   let body = null;
-  if (data) {
-    body = url.includes('/upload') ? (data as FormData) : (data as string);
+  if (data && url.includes('/upload') && method === 'POST') {
+    body = data as FormData;
+  } else if (data && url.includes('/uploads') && method === 'DELETE') {
+    body = JSON.stringify(data);
+  } else {
+    body = data as string;
   }
 
   const requestOptions: RequestInit = {
@@ -60,6 +70,7 @@ export interface UploadFile {
 
 export interface LogResponse extends DataStringResponse {}
 export interface UploadResponse extends DataArrResponse<UploadFile> {}
+export interface UploadDeleteResponse extends DataStringResponse {}
 
 export interface NilResponse {
   ack: string;
@@ -83,4 +94,8 @@ export async function uploadFile(file: File): Promise<NilResponse> {
 
 export async function uploadsGet(): Promise<UploadResponse> {
   return fetchJSON<UploadResponse>(`${baseUrl}api/uploads`, 'GET');
+}
+
+export async function uploadsDelete(payload: UploadsPayload): Promise<UploadDeleteResponse> {
+  return fetchJSON<UploadDeleteResponse>(`${baseUrl}api/uploads`, 'DELETE', payload);
 }

@@ -48,6 +48,7 @@ func main() {
 	router.HandleFunc("/api/log", endpoints.HandleLogPost).Methods("POST")
 	router.HandleFunc("/api/uploads", endpoints.HandleUpload).Methods("POST")
 	router.HandleFunc("/api/uploads", endpoints.HandleListUploads).Methods("GET")
+	router.HandleFunc("/api/uploads", endpoints.HandleDeleteUpload).Methods("DELETE") 
 
 	// Determine home dir
 	homeDir, err := utils.GetHomeDir()
