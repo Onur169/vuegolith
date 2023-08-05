@@ -10,6 +10,10 @@ import (
 	"onursahin.dev/vuegolith/utils"
 )
 
+type UploadsList struct {
+	Name string `json:"name"`
+}
+
 func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		api.RespondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
@@ -32,9 +36,9 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var fileNames []string
+	var fileNames []UploadsList
 	for _, file := range files {
-		fileNames = append(fileNames, file.Name())
+		fileNames = append(fileNames, UploadsList{Name: file.Name()})
 	}
 
 	api.RespondJSON(w, http.StatusOK, fileNames)

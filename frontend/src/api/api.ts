@@ -41,13 +41,17 @@ export interface DataStringResponse {
   data: string;
 }
 
-export interface DataStringArrResponse {
+export interface DataArrResponse<T> {
   ack: string;
-  data: string[];
+  data: T[];
+}
+
+export interface UploadFile {
+  name: string;
 }
 
 export interface LogResponse extends DataStringResponse {}
-export interface UploadResponse extends DataStringArrResponse {}
+export interface UploadResponse extends DataArrResponse<UploadFile> {}
 
 export interface NilResponse {
   ack: string;
