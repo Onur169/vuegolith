@@ -2,7 +2,18 @@
 
 ## Introduction
 
-Welcome to Vuegolith! This project combines a backend web server built with Go and a frontend web application built with Vue.js. Vuegolith aims to provide a user-friendly interface for various tasks, along with an easy-to-use file upload functionality.
+Welcome to Vuegolith! This project combines a backend web server built with Go and a frontend web application built with Vue, TypeScript and Tailwind. Vuegolith aims to provide a user-friendly interface for various tasks, along with an easy-to-use file upload functionality.
+
+<!-- TypeScript Logo -->
+
+## Technologies Used
+
+<div style="display:flex; flex-direction: row; gap: 2rem">
+    <img src="assets/ts-logo.svg" alt="TypeScript Logo" width="100" height="100">
+    <img src="assets/vue-logo.svg" alt="Vue.js Logo" width="100" height="100">
+    <img src="assets/tailwind-logo.svg" alt="Tailwind CSS Logo" width="100" height="100">
+    <img src="assets/go-logo.svg" alt="Go Logo" width="100" height="100">
+</div>
 
 ## Getting Started
 
