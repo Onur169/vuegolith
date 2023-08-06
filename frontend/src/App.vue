@@ -19,41 +19,36 @@
                   >{{ uploadedFile.name }} ({{ formatBytes(uploadedFile.size) }})</a
                 >
                 <div class="flex flex-row gap-x-3">
-                  <template v-if="!isHoveringDownloadIcon[index]">
-                    <ArrowDownOnSquareIconSolid
-                      class="h-6 w-6 cursor-pointer"
-                      @mouseenter="handleIsHoverDownloadIcon(index, true)"
-                      @mouseleave="handleIsHoverDownloadIcon(index, false)"
-                    />
-                  </template>
-                  <template v-else>
-                    <ArrowDownOnSquareIcon
-                      class="h-6 w-6 cursor-pointer"
-                      @click="
-                        handleDownload(`${apiBaseUrl}uploads/${uploadedFile.name}`, uploadFile.name)
-                      "
-                      @mouseenter="handleIsHoverDownloadIcon(index, true)"
-                      @mouseleave="handleIsHoverDownloadIcon(index, false)"
-                    />
-                  </template>
+                  <IconHover>
+                    <template #default="{ hover, hovered }">
+                      <div
+                        @mouseenter="hover(true)"
+                        @mouseleave="hover(false)"
+                        @click="
+                          handleDownload(
+                            `${apiBaseUrl}uploads/${uploadedFile.name}`,
+                            uploadFile.name,
+                          )
+                        "
+                      >
+                        <ArrowDownOnSquareIcon class="h-6 w-6 cursor-pointer" v-if="hovered" />
+                        <ArrowDownOnSquareIconSolid class="h-6 w-6 cursor-pointer" v-else />
+                      </div>
+                    </template>
+                  </IconHover>
 
-                  <template v-if="!isHoveringTrashIcon[index]">
-                    <TrashIconSolid
-                      class="h-6 w-6 cursor-pointer"
-                      @mouseenter="handleIsHoverTrashIcon(index, true)"
-                      @mouseleave="handleIsHoverTrashIcon(index, false)"
-                    />
-                  </template>
-                  <template v-else>
-                    <TrashIcon
-                      class="h-6 w-6 cursor-pointer"
-                      @click="handleDelete(uploadedFile.name)"
-                      @mouseenter="handleIsHoverTrashIcon(index, true)"
-                      @mouseleave="handleIsHoverTrashIcon(index, false)"
-                    />
-                  </template>
-
-                  <!-- <TrashIcon class="h-6 w-6" /> -->
+                  <IconHover>
+                    <template #default="{ hover, hovered }">
+                      <div
+                        @mouseenter="hover(true)"
+                        @mouseleave="hover(false)"
+                        @click="handleDelete(uploadedFile.name)"
+                      >
+                        <TrashIcon class="h-6 w-6 cursor-pointer" v-if="hovered" />
+                        <TrashIconSolid class="h-6 w-6 cursor-pointer" v-else />
+                      </div>
+                    </template>
+                  </IconHover>
                 </div>
               </li>
             </ul>
@@ -89,6 +84,7 @@ import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
 import Button from './components/Button.vue';
 import Filechooser from './components/Filechooser.vue';
+import IconHover from './components/IconHover.vue';
 import { apiBaseUrl } from './api/api';
 import { logPost, uploadsDelete, logGet, uploadFile, uploadsGet, UploadFile } from './api/calls';
 import StatusBar from './components/StatusBar.vue';
@@ -230,18 +226,27 @@ const logContent = ref('');
 const fetchedLogContent = ref('');
 const fetchedUploadsList = ref([] as UploadFile[]);
 
-// Array(fetchedUploadsList.value.length).fill(false)... lieberi onMounted
-// length check durchführen, da in prod bei keinen uploads die seite nicht korrekt gerendert wird
+// const isHoveringDownloadIcon = ref(initArrayWithBooleans(fetchedUploadsList.value.length));
+// const handleIsHoverDownloadIcon = (index: number, hovering: boolean) => {
+//   setTimeout(
+//     () =>
+//       (isHoveringDownloadIcon.value = updateHoveringState(
+//         isHoveringDownloadIcon.value,
+//         index,
+//         hovering,
+//       )),
+//     1,
+//   );
+// };
 
-const isHoveringDownloadIcon = ref(initArrayWithBooleans(fetchedUploadsList.value.length));
-const handleIsHoverDownloadIcon = (index: number, hovering: boolean) => {
-  isHoveringDownloadIcon.value = updateHoveringState(isHoveringDownloadIcon.value, index, hovering);
-};
-
-const isHoveringTrashIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
-const handleIsHoverTrashIcon = (index: number, hovering: boolean) => {
-  isHoveringTrashIcon.value = updateHoveringState(isHoveringTrashIcon.value, index, hovering);
-};
+// const isHoveringTrashIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
+// const handleIsHoverTrashIcon = (index: number, hovering: boolean) => {
+//   setTimeout(
+//     () =>
+//       (isHoveringTrashIcon.value = updateHoveringState(isHoveringTrashIcon.value, index, hovering)),
+//     1,
+//   );
+// };
 
 const isLoading = ref(false);
 
