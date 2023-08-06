@@ -16,7 +16,7 @@
                 :key="index"
               >
                 <a :href="`${apiBaseUrl}uploads/${uploadedFile.name}`" target="_blank"
-                  >{{ uploadedFile.name }} ({{ uploadedFile.size / 1000000 }} MB)</a
+                  >{{ uploadedFile.name }} ({{ formatBytes(uploadedFile.size) }})</a
                 >
                 <div class="flex flex-row gap-x-3">
                   <template v-if="!isHoveringDownloadIcon[index]">
@@ -104,6 +104,7 @@ import {
   TrashIcon as TrashIconSolid,
 } from '@heroicons/vue/24/outline';
 import CodePreview from './components/CodePreview.vue';
+import { formatBytes, initArrayWithBooleans, updateHoveringState } from './helper';
 
 const handleClipboardSuccess = () => setStatus('Erfolgreich kopiert');
 const handleClipboardFail = () => setStatus('Kopieren hat fehlgeschlagen');
@@ -232,18 +233,14 @@ const fetchedUploadsList = ref([] as UploadFile[]);
 // Array(fetchedUploadsList.value.length).fill(false)... lieberi onMounted
 // length check durchführen, da in prod bei keinen uploads die seite nicht korrekt gerendert wird
 
-const isHoveringDownloadIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
+const isHoveringDownloadIcon = ref(initArrayWithBooleans(fetchedUploadsList.value.length));
 const handleIsHoverDownloadIcon = (index: number, hovering: boolean) => {
-  const arr = isHoveringDownloadIcon.value;
-  arr[index] = hovering;
-  isHoveringDownloadIcon.value = arr;
+  isHoveringDownloadIcon.value = updateHoveringState(isHoveringDownloadIcon.value, index, hovering);
 };
 
 const isHoveringTrashIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
 const handleIsHoverTrashIcon = (index: number, hovering: boolean) => {
-  const arr = isHoveringTrashIcon.value;
-  arr[index] = hovering;
-  isHoveringTrashIcon.value = arr;
+  isHoveringTrashIcon.value = updateHoveringState(isHoveringTrashIcon.value, index, hovering);
 };
 
 const isLoading = ref(false);

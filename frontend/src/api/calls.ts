@@ -4,7 +4,6 @@ import {
   HttpMethod,
   NilResponse,
   PayloadConfig,
-  apiBaseUrl,
   request,
 } from './api';
 
