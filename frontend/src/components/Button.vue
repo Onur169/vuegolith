@@ -24,7 +24,7 @@
         </svg>
       </div>
     </div>
-    <div class="relative">
+    <div class="relative uppercase">
       <span>{{ text }}</span>
     </div>
   </button>

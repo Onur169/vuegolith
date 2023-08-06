@@ -1,7 +1,7 @@
 <template>
   <textarea
     v-model="content"
-    class="w-full resize-none h-24 rounded-none outline-none border-2 border-primary p-4"
+    class="w-full resize-none h-24 rounded-none outline-none border-2 border-primary p-4 font-regular"
     spellcheck="false"
   ></textarea>
 </template>

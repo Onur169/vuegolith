@@ -4,7 +4,7 @@
       <Tab v-for="tab in tabs" :key="tab.id" v-slot="{ selected }" as="template">
         <button
           :class="[
-            'flex flex-row items-center justify-center capitalize w-full select-none rounded-none py-2.5 text-sm font-medium leading-5 focus:outline-none',
+            'flex flex-row items-center justify-center uppercase w-full select-none rounded-none py-2.5 text-sm font-medium leading-5 focus:outline-none',
             selected
               ? 'bg-secondary shadow'
               : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
