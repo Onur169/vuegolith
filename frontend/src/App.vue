@@ -230,28 +230,6 @@ const logContent = ref('');
 const fetchedLogContent = ref('');
 const fetchedUploadsList = ref([] as UploadFile[]);
 
-// const isHoveringDownloadIcon = ref(initArrayWithBooleans(fetchedUploadsList.value.length));
-// const handleIsHoverDownloadIcon = (index: number, hovering: boolean) => {
-//   setTimeout(
-//     () =>
-//       (isHoveringDownloadIcon.value = updateHoveringState(
-//         isHoveringDownloadIcon.value,
-//         index,
-//         hovering,
-//       )),
-//     1,
-//   );
-// };
-
-// const isHoveringTrashIcon = ref(Array(fetchedUploadsList.value.length).fill(false));
-// const handleIsHoverTrashIcon = (index: number, hovering: boolean) => {
-//   setTimeout(
-//     () =>
-//       (isHoveringTrashIcon.value = updateHoveringState(isHoveringTrashIcon.value, index, hovering)),
-//     1,
-//   );
-// };
-
 const isLoading = ref(false);
 
 const lastActionDate = ref<Date>(new Date());

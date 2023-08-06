@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row items-center justify-center w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary p-3"
+    class="flex flex-row items-center justify-center font-regular w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary p-3"
   >
     <slot></slot> {{ computedLogDate }}: {{ text }}
   </div>
