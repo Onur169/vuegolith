@@ -1,14 +1,14 @@
 <template>
   <button
     @click="handleClick"
-    class="select-none duration-150 rounded-none border-2 border-primary hover:border-primary active:border-accent focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm font-bold"
+    class="select-none rounded-none border-2 border-primary hover:bg-secondary focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm font-bold"
   >
     <div class="relative">
-      <div class="absolute left-[calc[-50%]] -translate-x-1/2 top-1/2 -translate-y-1/2">
+      <div class="absolute -left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
         <svg
           v-show="isLoading"
           aria-hidden="true"
-          class="w-4 h-4 mr-2 text-secondary animate-spin fill-primary relative -left-3"
+          class="w-4 h-4 mr-2 text-primary animate-spin fill-gray-500 relative -left-3 top-[-1px]"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

@@ -1,8 +1,9 @@
 <template>
-  <div class="font-regular">
+  <div class="font-regular select-none">
     <input
       type="file"
       ref="fileInput"
+      class="cursor-pointer font-regular text-md outline-primary outline-dashed outline-2 p-3 w-full outline-offset-[-3px]"
       @change="onFileChange"
       :accept="accept"
       :multiple="multiple"

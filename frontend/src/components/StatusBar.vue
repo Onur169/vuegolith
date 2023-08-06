@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row items-center justify-center font-regular w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary p-3"
+    class="flex flex-row items-center justify-center font-regular w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary p-3 select-none"
   >
     <slot></slot> {{ computedLogDate }}: {{ text }}
   </div>
@@ -21,7 +21,6 @@ const { text, logDate } = toRefs(props);
 
 const computedLogDate = ref<string>('');
 
-// Arrow Function als updateLogDate
 const updateLogDate = () => {
   const distanceNow = logDate.value
     ? formatDistanceToNow(logDate.value, {
@@ -43,11 +42,9 @@ onMounted(() => {
     console.log('unmounted');
     clearInterval(timer);
 
-    // Emitting des "destroy"-Events beim Unmounting
     emit('destroy');
   });
 });
 
-// Deklaration des "destroy"-Events
 const emit = defineEmits();
 </script>
