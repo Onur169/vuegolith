@@ -12,8 +12,8 @@ import (
 )
 
 type UploadsList struct {
-	Name  string `json:"name"`
-	Size int64   `json:"size"`
+	Name string `json:"name"`
+	Size int64  `json:"size"`
 }
 
 func HandleListUploads(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +22,6 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Determine Path
 	path, err := utils.GetHomeDir()
 	if err != nil {
 		api.RespondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
@@ -41,15 +40,15 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 	var fileNames []UploadsList
 	for _, file := range files {
 		fileInfo, err := file.Info()
-		var size int64;
+		var size int64
 		if err != nil {
-            size = -1
-        } else {
+			size = -1
+		} else {
 			size = fileInfo.Size()
 		}
 
 		fileNames = append(fileNames, UploadsList{
-			Name: file.Name(), 
+			Name: file.Name(),
 			Size: size,
 		})
 	}
@@ -77,7 +76,7 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 
 	filename := payload.File
 
-	if(!utils.IsPathSafe(filename)) {
+	if !utils.IsPathSafe(filename) {
 		api.RespondJSON(w, http.StatusBadRequest, "Path is not safe")
 		return
 	}
@@ -126,7 +125,7 @@ func HandleUpload(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		api.RespondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
 		return
-	}
+}
 
 	err = r.ParseMultipartForm(10 << 30) // 1GB maximum file size
 	if err != nil {

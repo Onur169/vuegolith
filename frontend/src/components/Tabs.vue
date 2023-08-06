@@ -1,6 +1,6 @@
 <template>
   <TabGroup>
-    <TabList class="flex space-x-1 rounded-none bg-primary p-1 mb-4">
+    <TabList class="flex space-x-1 rounded-none bg-primary p-1 mb-6">
       <Tab v-for="tab in tabs" :key="tab.id" v-slot="{ selected }" as="template">
         <button
           :class="[
@@ -18,7 +18,7 @@
       </Tab>
     </TabList>
     <TabPanels>
-      <TabPanel v-for="(tab, idx) in tabs" :key="idx" :class="['rounded-none bg-white p-1']">
+      <TabPanel v-for="(tab, idx) in tabs" :key="idx" :class="['rounded-none bg-white']">
         <slot :tab="tab" :activeTab="activeTab"></slot>
       </TabPanel>
     </TabPanels>
