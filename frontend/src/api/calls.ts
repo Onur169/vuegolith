@@ -4,7 +4,7 @@ import {
   HttpMethod,
   NilResponse,
   PayloadConfig,
-  baseUrl,
+  apiBaseUrl,
   request,
 } from './api';
 
@@ -32,14 +32,13 @@ export interface UploadDeleteResponse extends DataStringResponse {}
 export async function logPost(content: string): Promise<NilResponse> {
   const payloadData: LogPayload = {
     data: content,
-    convertToJsonString: false,
     treatAsBodyInit: true,
   };
-  return request<NilResponse, LogPayload>(`${baseUrl}api/log`, HttpMethod.POST, payloadData);
+  return request<NilResponse, LogPayload>(`api/log`, HttpMethod.POST, payloadData);
 }
 
 export async function logGet(): Promise<LogResponse> {
-  return request<LogResponse, null>(`${baseUrl}api/log`, HttpMethod.GET);
+  return request<LogResponse, null>(`api/log`, HttpMethod.GET);
 }
 
 export async function uploadFile(file: File): Promise<NilResponse> {
@@ -51,11 +50,11 @@ export async function uploadFile(file: File): Promise<NilResponse> {
     treatAsBodyInit: true,
   };
 
-  return request<NilResponse, FormDataPayload>(`${baseUrl}api/uploads`, HttpMethod.POST, payload);
+  return request<NilResponse, FormDataPayload>(`api/uploads`, HttpMethod.POST, payload);
 }
 
 export async function uploadsGet(): Promise<UploadResponse> {
-  return request<UploadResponse, null>(`${baseUrl}api/uploads`, HttpMethod.GET);
+  return request<UploadResponse, null>(`api/uploads`, HttpMethod.GET);
 }
 
 export async function uploadsDelete(fileName: string): Promise<UploadDeleteResponse> {
@@ -65,7 +64,7 @@ export async function uploadsDelete(fileName: string): Promise<UploadDeleteRespo
   };
 
   return request<UploadDeleteResponse, UploadsPayload>(
-    `${baseUrl}api/uploads`,
+    `api/uploads`,
     HttpMethod.DELETE,
     payloadData,
   );

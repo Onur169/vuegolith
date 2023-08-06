@@ -1,6 +1,6 @@
 const useSecureLocalDomain = import.meta.env.VITE_USE_SECURE_LOCAL_DOMAIN === 'true';
 
-export const baseUrl = replacePortInURL(
+export const apiBaseUrl = replacePortInURL(
   useSecureLocalDomain ? `https://vuegolith.local/` : `http://${window.location.host}`,
   useSecureLocalDomain ? '' : '8484',
 );
@@ -11,6 +11,16 @@ export function replacePortInURL(url: string, newPort: string): string {
   return u.toString();
 }
 
+/**
+ * Sends an HTTP request and returns the received response.
+ *
+ * @typeparam T - The desired type of the response data.
+ * @typeparam P - The type for the payload configuration.
+ * @param {string} url - The URL of the request.
+ * @param {HttpMethod} method - The HTTP method of the request.
+ * @param {P} payload - The optional payload configuration.
+ * @returns {Promise<T>} - A promise that contains the response data received from the server.
+ */
 export async function request<T, P extends PayloadConfig | null>(
   url: string,
   method: HttpMethod,
@@ -33,7 +43,7 @@ export async function request<T, P extends PayloadConfig | null>(
     body,
   };
 
-  const response = await fetch(url, requestOptions);
+  const response = await fetch(`${apiBaseUrl}${url}`, requestOptions);
   const responseData = await response.json();
 
   if (!response.ok) {

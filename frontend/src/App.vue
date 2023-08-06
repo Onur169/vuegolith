@@ -15,7 +15,7 @@
                 v-for="(uploadedFile, index) in fetchedUploadsList"
                 :key="index"
               >
-                <a :href="`${baseUrl}uploads/${uploadedFile.name}`" target="_blank"
+                <a :href="`${apiBaseUrl}uploads/${uploadedFile.name}`" target="_blank"
                   >{{ uploadedFile.name }} ({{ uploadedFile.size / 1000000 }} MB)</a
                 >
                 <div class="flex flex-row gap-x-3">
@@ -30,7 +30,7 @@
                     <ArrowDownOnSquareIcon
                       class="h-6 w-6 cursor-pointer"
                       @click="
-                        handleDownload(`${baseUrl}uploads/${uploadedFile.name}`, uploadFile.name)
+                        handleDownload(`${apiBaseUrl}uploads/${uploadedFile.name}`, uploadFile.name)
                       "
                       @mouseenter="handleIsHoverDownloadIcon(index, true)"
                       @mouseleave="handleIsHoverDownloadIcon(index, false)"
@@ -89,7 +89,7 @@ import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
 import Button from './components/Button.vue';
 import Filechooser from './components/Filechooser.vue';
-import { baseUrl } from './api/api';
+import { apiBaseUrl } from './api/api';
 import { logPost, uploadsDelete, logGet, uploadFile, uploadsGet, UploadFile } from './api/calls';
 import StatusBar from './components/StatusBar.vue';
 import {
