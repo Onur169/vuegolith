@@ -61,6 +61,13 @@ func HandleLogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Validate content
+	content := string(c[:])
+	if strings.TrimSpace(content) == "" {
+		api.RespondJSON(w, http.StatusInternalServerError, "Cannot save empty log")
+		return
+	}
+
 	// Create or append to the log file
 	file, err := os.OpenFile(path+"/log.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
@@ -68,13 +75,6 @@ func HandleLogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
-
-	// Validate content
-	content := string(c[:])
-	if strings.TrimSpace(content) == "" {
-		api.RespondJSON(w, http.StatusInternalServerError, "Cannot save empty log")
-		return
-	}
 
 	// Write the log entry to the file
 	_, err = file.WriteString(string(c[:]) + "\n")

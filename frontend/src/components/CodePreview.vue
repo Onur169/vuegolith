@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative" v-if="content">
     <pre
       ref="preElement"
       @click="selectText()"
