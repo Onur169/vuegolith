@@ -13,7 +13,6 @@ import (
 
 type UploadsList struct {
 	Name  string `json:"name"`
-	IsDir bool   `json:"isDir"`
 	Size int64   `json:"size"`
 }
 
@@ -51,7 +50,6 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 
 		fileNames = append(fileNames, UploadsList{
 			Name: file.Name(), 
-			IsDir: file.IsDir(),
 			Size: size,
 		})
 	}
@@ -84,7 +82,6 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Determine Path
 	path, err := utils.GetHomeDir()
 	if err != nil {
 		api.RespondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")

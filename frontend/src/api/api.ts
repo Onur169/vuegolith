@@ -4,7 +4,7 @@ export const baseUrl = replacePortInURL(
   useSecureLocalDomain ? '' : '8484',
 );
 
-// todo: fetchJSON refactoren und in kleinere Module aufteilen
+// todo: request refactoren und in kleinere Module aufteilen
 // In der App.vue müssen die promises auf ack === "success" checken für den erfolg
 
 export function replacePortInURL(url: string, newPort: string): string {
@@ -13,22 +13,21 @@ export function replacePortInURL(url: string, newPort: string): string {
   return u.toString();
 }
 
-export interface UploadsPayload {
-  file: string;
-}
-
-export async function fetchJSON<T>(
+export async function request<T, P extends PayloadConfig | null>(
   url: string,
-  method: string,
-  data?: string | FormData | UploadsPayload,
+  method: HttpMethod,
+  payload?: P,
 ): Promise<T> {
-  let body = null;
-  if (data && url.includes('/upload') && method === 'POST') {
-    body = data as FormData;
-  } else if (data && url.includes('/uploads') && method === 'DELETE') {
+  let body;
+
+  if (payload?.treatAsBodyInit) {
+    const { data } = payload;
+    body = data as BodyInit;
+  }
+
+  if (payload?.convertToJsonString) {
+    const { data } = payload;
     body = JSON.stringify(data);
-  } else {
-    body = data as string;
   }
 
   const requestOptions: RequestInit = {
@@ -50,9 +49,21 @@ export function isSecureLocalDomainActive() {
   return useSecureLocalDomain;
 }
 
-export interface LogPayload {
-  message: string;
-  timestamp: string;
+export enum HttpMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  PATCH = 'PATCH',
+  HEAD = 'HEAD',
+  OPTIONS = 'OPTIONS',
+  CONNECT = 'CONNECT',
+  TRACE = 'TRACE',
+}
+
+export interface NilResponse {
+  ack: string;
+  data: null;
 }
 
 export interface DataStringResponse {
@@ -65,6 +76,24 @@ export interface DataArrResponse<T> {
   data: T[];
 }
 
+export interface PayloadConfig {
+  convertToJsonString?: boolean;
+  treatAsBodyInit?: boolean;
+  data: unknown;
+}
+
+export interface UploadsPayload extends PayloadConfig {
+  data: { file: string };
+}
+
+export interface LogPayload extends PayloadConfig {
+  data: string;
+}
+
+export interface FormDataPayload extends PayloadConfig {
+  data: FormData;
+}
+
 export interface UploadFile {
   name: string;
   size: number;
@@ -75,30 +104,44 @@ export interface LogResponse extends DataStringResponse {}
 export interface UploadResponse extends DataArrResponse<UploadFile> {}
 export interface UploadDeleteResponse extends DataStringResponse {}
 
-export interface NilResponse {
-  ack: string;
-  data: null;
-}
-
-export async function logPost(data: string): Promise<NilResponse> {
-  return fetchJSON<NilResponse>(`${baseUrl}api/log`, 'POST', data);
+export async function logPost(content: string): Promise<NilResponse> {
+  const payloadData: LogPayload = {
+    data: content,
+    convertToJsonString: false,
+    treatAsBodyInit: true,
+  };
+  return request<NilResponse, LogPayload>(`${baseUrl}api/log`, HttpMethod.POST, payloadData);
 }
 
 export async function logGet(): Promise<LogResponse> {
-  return fetchJSON<LogResponse>(`${baseUrl}api/log`, 'GET');
+  return request<LogResponse, null>(`${baseUrl}api/log`, HttpMethod.GET);
 }
 
 export async function uploadFile(file: File): Promise<NilResponse> {
   const formData = new FormData();
   formData.append('file', file);
 
-  return fetchJSON<NilResponse>(`${baseUrl}api/uploads`, 'POST', formData);
+  const payload: FormDataPayload = {
+    data: formData,
+    treatAsBodyInit: true,
+  };
+
+  return request<NilResponse, FormDataPayload>(`${baseUrl}api/uploads`, HttpMethod.POST, payload);
 }
 
 export async function uploadsGet(): Promise<UploadResponse> {
-  return fetchJSON<UploadResponse>(`${baseUrl}api/uploads`, 'GET');
+  return request<UploadResponse, null>(`${baseUrl}api/uploads`, HttpMethod.GET);
 }
 
-export async function uploadsDelete(payload: UploadsPayload): Promise<UploadDeleteResponse> {
-  return fetchJSON<UploadDeleteResponse>(`${baseUrl}api/uploads`, 'DELETE', payload);
+export async function uploadsDelete(fileName: string): Promise<UploadDeleteResponse> {
+  const payloadData: UploadsPayload = {
+    data: { file: fileName },
+    convertToJsonString: true,
+  };
+
+  return request<UploadDeleteResponse, UploadsPayload>(
+    `${baseUrl}api/uploads`,
+    HttpMethod.DELETE,
+    payloadData,
+  );
 }

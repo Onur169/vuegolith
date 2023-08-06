@@ -98,6 +98,7 @@ import {
   baseUrl,
   uploadsDelete,
   UploadsPayload,
+  LogPayload,
 } from './api/api';
 import StatusBar from './components/StatusBar.vue';
 import {
@@ -217,7 +218,7 @@ const handleDownload = async (path: string, fileName: string) => {
 const handleDelete = (fileName: string) => {
   const res = confirm(`${fileName} wirklich löschen?`);
   if (res) {
-    uploadsDelete({ file: fileName } as UploadsPayload)
+    uploadsDelete(fileName)
       .then(res => {
         if (res.ack === 'success') {
           setStatus(`${fileName} erfolgreich gelöscht`);
