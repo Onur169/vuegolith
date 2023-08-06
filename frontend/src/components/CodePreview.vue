@@ -3,7 +3,7 @@
     <pre
       ref="preElement"
       @click="selectText()"
-      class="max-h-96 border-2 border-dashed border-primary p-3 overflow-y-scroll"
+      class="max-h-96 border-2 border-dashed border-primary p-3 overflow-y-scroll font-regular text-md"
       >{{ splitAndReverse(content, false).join('\n') }}</pre
     >
     <template v-if="isHovering && !hasCopied">

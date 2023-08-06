@@ -11,7 +11,7 @@
             />
             <ul class="flex flex-col" v-if="fetchedUploadsList?.length > 0">
               <li
-                class="flex flex-row justify-between items-center hover:bg-secondary w-12- h-12 p-3 hover:outline hover:outline-primary hover:shadow-md"
+                class="flex flex-row justify-between items-center font-regular hover:font-medium hover:bg-secondary w-12- h-12 p-3 hover:outline hover:outline-primary hover:shadow-md"
                 v-for="(uploadedFile, index) in fetchedUploadsList"
                 :key="index"
               >
@@ -22,7 +22,6 @@
                   <IconHover>
                     <template #default="{ hover, hovered }">
                       <div
-                        class=""
                         @mouseenter="hover(true)"
                         @mouseleave="hover(false)"
                         @click="
@@ -61,7 +60,7 @@
           <template v-if="'log' === activeTab">
             <Textarea class="mb-4" @content="handleLogContent" :value="logContent" />
             <Button
-              class="mb-4 w-full"
+              class="mb-4 w-full font-medium"
               text="Speichern"
               :isLoading="isLoading"
               @clicked="handleLogButton"

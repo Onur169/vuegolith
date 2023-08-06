@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font-medium">
     <input
       type="file"
       ref="fileInput"
