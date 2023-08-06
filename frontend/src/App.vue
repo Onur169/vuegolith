@@ -22,6 +22,7 @@
                   <IconHover>
                     <template #default="{ hover, hovered }">
                       <div
+                        class=""
                         @mouseenter="hover(true)"
                         @mouseleave="hover(false)"
                         @click="
@@ -31,8 +32,11 @@
                           )
                         "
                       >
-                        <ArrowDownOnSquareIcon class="h-6 w-6 cursor-pointer" v-if="hovered" />
-                        <ArrowDownOnSquareIconSolid class="h-6 w-6 cursor-pointer" v-else />
+                        <ArrowDownOnSquareIcon class="h-6 w-6 cursor-pointer" v-show="hovered" />
+                        <ArrowDownOnSquareIconSolid
+                          class="h-6 w-6 cursor-pointer"
+                          v-show="!hovered"
+                        />
                       </div>
                     </template>
                   </IconHover>
@@ -40,12 +44,13 @@
                   <IconHover>
                     <template #default="{ hover, hovered }">
                       <div
+                        class=""
                         @mouseenter="hover(true)"
                         @mouseleave="hover(false)"
                         @click="handleDelete(uploadedFile.name)"
                       >
-                        <TrashIcon class="h-6 w-6 cursor-pointer" v-if="hovered" />
-                        <TrashIconSolid class="h-6 w-6 cursor-pointer" v-else />
+                        <TrashIcon class="h-6 w-6 cursor-pointer" v-show="hovered" />
+                        <TrashIconSolid class="h-6 w-6 cursor-pointer" v-show="!hovered" />
                       </div>
                     </template>
                   </IconHover>
