@@ -89,17 +89,8 @@ import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
 import Button from './components/Button.vue';
 import Filechooser from './components/Filechooser.vue';
-import {
-  logPost,
-  logGet,
-  uploadFile,
-  uploadsGet,
-  UploadFile,
-  baseUrl,
-  uploadsDelete,
-  UploadsPayload,
-  LogPayload,
-} from './api/api';
+import { baseUrl } from './api/api';
+import { logPost, uploadsDelete, logGet, uploadFile, uploadsGet, UploadFile } from './api/calls';
 import StatusBar from './components/StatusBar.vue';
 import {
   PencilSquareIcon,
