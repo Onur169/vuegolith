@@ -1,5 +1,6 @@
 <template>
-  <div class="flex justify-center">
+  <Progressbar :percentage="progressVal" class="fixed top-0 left-0" v-show="showProgress" />
+  <div class="flex flex-col items-center justify-center mt-3">
     <div class="flex flex-col justify-center w-full p-6 md:w-3/4">
       <Tabs :tabs="tabs" @changed="handleTabChange">
         <template v-slot:default="{ tab, activeTab }">
@@ -11,11 +12,14 @@
             />
             <ul class="flex flex-col" v-if="fetchedUploadsList?.length > 0">
               <li
-                class="flex flex-row justify-between items-center font-regular hover:font-medium hover:bg-secondary w-12- h-12 p-3 hover:outline hover:outline-primary hover:shadow-md"
+                class="flex flex-row justify-between items-center font-regular hover:bg-secondary w-12- h-12 p-3 hover:outline hover:outline-primary hover:shadow-md"
                 v-for="(uploadedFile, index) in fetchedUploadsList"
                 :key="index"
               >
-                <a :href="`${apiBaseUrl}uploads/${uploadedFile.name}`" target="_blank"
+                <a
+                  :href="`${apiBaseUrl}uploads/${uploadedFile.name}`"
+                  :data-text="uploadedFile.name"
+                  target="_blank"
                   >{{ uploadedFile.name }} ({{ formatBytes(uploadedFile.size) }})</a
                 >
                 <div class="flex flex-row gap-x-3">
@@ -90,8 +94,17 @@ import Button from './components/Button.vue';
 import Filechooser from './components/Filechooser.vue';
 import IconHover from './components/IconHover.vue';
 import { apiBaseUrl } from './api/api';
-import { logPost, uploadsDelete, logGet, uploadFile, uploadsGet, UploadFile } from './api/calls';
+import {
+  logPost,
+  uploadsDelete,
+  logGet,
+  uploadFile,
+  uploadsGet,
+  UploadFile,
+  uploadFileWithProgress,
+} from './api/calls';
 import StatusBar from './components/StatusBar.vue';
+import Progressbar from './components/Progressbar.vue';
 import {
   PencilSquareIcon,
   CloudArrowUpIcon,
@@ -104,7 +117,7 @@ import {
   TrashIcon as TrashIconSolid,
 } from '@heroicons/vue/24/outline';
 import CodePreview from './components/CodePreview.vue';
-import { formatBytes, initArrayWithBooleans, updateHoveringState } from './helper';
+import { formatBytes } from './helper';
 
 const handleClipboardSuccess = () => setStatus('Erfolgreich kopiert');
 const handleClipboardFail = () => setStatus('Kopieren hat fehlgeschlagen');
@@ -147,14 +160,21 @@ const handleFilesSelected = (files: FileList) => {
     const file = files[0];
 
     shouldResetFileChooser.value = false;
+    showProgress.value = true;
 
-    uploadFile(file)
+    uploadFileWithProgress(file, (percentage: number) => (progressVal.value = percentage))
       .then(async () => {
         setStatus('Upload erfolgreich');
         handleUploadGet();
       })
       .catch(() => setStatus('Upload nicht erfolgreich'))
-      .finally(() => (shouldResetFileChooser.value = true));
+      .finally(() => {
+        shouldResetFileChooser.value = true;
+        setTimeout(() => {
+          showProgress.value = false;
+          progressVal.value = 0;
+        }, 1000);
+      });
   }
 };
 
@@ -225,6 +245,9 @@ const setStatus = (msg: string) => {
   lastActionDate.value = new Date();
   statusText.value = msg;
 };
+
+const showProgress = ref(false);
+const progressVal = ref(0);
 
 const logContent = ref('');
 const fetchedLogContent = ref('');

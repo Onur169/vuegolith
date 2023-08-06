@@ -4,6 +4,7 @@ import {
   HttpMethod,
   NilResponse,
   PayloadConfig,
+  apiBaseUrl,
   request,
 } from './api';
 
@@ -50,6 +51,38 @@ export async function uploadFile(file: File): Promise<NilResponse> {
   };
 
   return request<NilResponse, FormDataPayload>(`api/uploads`, HttpMethod.POST, payload);
+}
+
+export async function uploadFileWithProgress(
+  file: File,
+  onProgress: (percentage: number) => void,
+): Promise<NilResponse> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return new Promise<NilResponse>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener('progress', event => {
+      if (event.lengthComputable) {
+        const percentage = (event.loaded / event.total) * 100;
+        onProgress(percentage);
+      }
+    });
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          resolve(JSON.parse(xhr.responseText));
+        } else {
+          reject(xhr.statusText || 'Something went wrong');
+        }
+      }
+    };
+
+    xhr.open('POST', `${apiBaseUrl}api/uploads`, true);
+    xhr.send(formData);
+  });
 }
 
 export async function uploadsGet(): Promise<UploadResponse> {
