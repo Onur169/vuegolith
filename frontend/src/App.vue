@@ -1,4 +1,11 @@
 <template>
+  <Dialog :open="openDeleteDialog">
+    <p class="m-3">Datei {{ fileToDelete }} löschen?</p>
+    <div class="flex items-center justify-evenly gap-x-3">
+      <Button @clicked="handleFileToDeleteDialog(true)" text="Ja, bitte löschen!" />
+      <Button @clicked="handleFileToDeleteDialog(false)" text="Schließen" />
+    </div>
+  </Dialog>
   <Progressbar :percentage="progressVal" class="fixed top-0 left-0" v-show="showProgress" />
   <div class="flex flex-col items-center justify-center mt-3">
     <div class="flex flex-col justify-center w-full p-6 md:w-3/4">
@@ -87,21 +94,22 @@
 </template>
 
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
+import Dialog from './components/Dialog.vue';
 import Button from './components/Button.vue';
 import Filechooser from './components/Filechooser.vue';
 import IconHover from './components/IconHover.vue';
 import { apiBaseUrl } from './api/api';
 import {
   logPost,
-  uploadsDelete,
   logGet,
   uploadFile,
   uploadsGet,
   UploadFile,
   uploadFileWithProgress,
+  uploadsDelete,
 } from './api/calls';
 import StatusBar from './components/StatusBar.vue';
 import Progressbar from './components/Progressbar.vue';
@@ -118,6 +126,37 @@ import {
 } from '@heroicons/vue/24/outline';
 import CodePreview from './components/CodePreview.vue';
 import { formatBytes } from './helper';
+
+const showProgress = ref(false);
+const progressVal = ref(0);
+
+const logContent = ref('');
+const fetchedLogContent = ref('');
+const fetchedUploadsList = ref([] as UploadFile[]);
+
+const isLoading = ref(false);
+
+const lastActionDate = ref<Date>(new Date());
+
+const shouldResetFileChooser = ref(false);
+
+const openDeleteDialog = ref(false);
+const fileToDelete = ref('');
+
+const statusText = ref('Bisher keine Aktion durchgeführt');
+
+const tabs = ref([
+  {
+    icon: <PencilSquareIcon class="h-6 w-6 mr-1.5" />,
+    name: 'log',
+    id: 1,
+  },
+  {
+    icon: <CloudArrowUpIcon class="h-6 w-6 mr-1.5" />,
+    name: 'upload',
+    id: 2,
+  },
+] as TabItem[]);
 
 const handleClipboardSuccess = () => setStatus('Erfolgreich kopiert');
 const handleClipboardFail = () => setStatus('Kopieren hat fehlgeschlagen');
@@ -228,17 +267,8 @@ const handleDownload = async (path: string, fileName: string) => {
 };
 
 const handleDelete = (fileName: string) => {
-  const res = confirm(`${fileName} wirklich löschen?`);
-  if (res) {
-    uploadsDelete(fileName)
-      .then(res => {
-        if (res.ack === 'success') {
-          setStatus(`${fileName} erfolgreich gelöscht`);
-          handleUploadGet();
-        }
-      })
-      .catch(() => setStatus(`${fileName} konnte nicht gelöscht werden`));
-  }
+  openDeleteDialog.value = true;
+  fileToDelete.value = fileName;
 };
 
 const setStatus = (msg: string) => {
@@ -246,31 +276,20 @@ const setStatus = (msg: string) => {
   statusText.value = msg;
 };
 
-const showProgress = ref(false);
-const progressVal = ref(0);
+const handleFileToDeleteDialog = (deleteFile: boolean) => {
+  openDeleteDialog.value = false;
 
-const logContent = ref('');
-const fetchedLogContent = ref('');
-const fetchedUploadsList = ref([] as UploadFile[]);
+  if (deleteFile) {
+    uploadsDelete(fileToDelete.value)
+      .then(res => {
+        if (res.ack === 'success') {
+          setStatus(`${fileToDelete.value} erfolgreich gelöscht`);
+          handleUploadGet();
+        }
+      })
+      .catch(() => setStatus(`${fileToDelete.value} konnte nicht gelöscht werden`));
+  }
 
-const isLoading = ref(false);
-
-const lastActionDate = ref<Date>(new Date());
-
-const shouldResetFileChooser = ref(false);
-
-const statusText = ref('Bisher keine Aktion durchgeführt');
-
-const tabs = ref([
-  {
-    icon: <PencilSquareIcon class="h-6 w-6 mr-1.5" />,
-    name: 'log',
-    id: 1,
-  },
-  {
-    icon: <CloudArrowUpIcon class="h-6 w-6 mr-1.5" />,
-    name: 'upload',
-    id: 2,
-  },
-] as TabItem[]);
+  fileToDelete.value = '';
+};
 </script>
