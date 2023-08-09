@@ -11,9 +11,11 @@
         <li
           v-for="(item, index) in items"
           :key="index"
-          class="select-none mb-4 last:mb-0 w-full border-2 border-primary p-3 hover:bg-secondary cursor-pointer font-medium uppercase"
+          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary cursor-pointer font-medium uppercase"
         >
-          <a :href="item.href" class="text-black font-bold">{{ item.name }}</a>
+          <RouterLink class="text-black font-bold w-full items-stretch flex p-3" :to="item.href">{{
+            item.name
+          }}</RouterLink>
         </li>
       </ul>
     </nav>
@@ -22,6 +24,7 @@
 
 <script setup lang="ts">
 import { toRefs, ref, onMounted, onUnmounted } from 'vue';
+import { RouterLink } from 'vue-router';
 
 export interface NavItem {
   name: string;
