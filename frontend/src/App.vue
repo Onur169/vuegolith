@@ -1,13 +1,22 @@
 <template>
+  <div v-if="showMenu">
+    <NavMenu :items="navigationItems" @outsideClick="showMenu = false" />
+  </div>
   <Dialog :open="openDeleteDialog">
-    <p class="m-3">Datei {{ fileToDelete }} löschen?</p>
+    <p class="m-3">
+      Datei <strong>{{ fileToDelete }}</strong> löschen?
+    </p>
     <div class="flex items-center justify-evenly gap-x-3">
       <Button @clicked="handleFileToDeleteDialog(true)" text="Ja, bitte löschen!" />
       <Button @clicked="handleFileToDeleteDialog(false)" text="Schließen" />
     </div>
   </Dialog>
   <Progressbar :percentage="progressVal" class="fixed top-0 left-0" v-show="showProgress" />
-  <div class="flex flex-col items-center justify-center mt-3">
+  <Bars3Icon
+    @click="toggleMenu"
+    class="h-5 w-5 md:h-9 md:w-9 fixed top-2 right-4 cursor-pointer hover:opacity-[.65]"
+  />
+  <div class="flex flex-col items-center justify-center mt-6 md:mt-3">
     <div class="flex flex-col justify-center w-full p-6 md:w-3/4">
       <Tabs :tabs="tabs" @changed="handleTabChange">
         <template v-slot:default="{ tab, activeTab }">
@@ -99,6 +108,7 @@ import Tabs, { TabItem } from './components/Tabs.vue';
 import Textarea from './components/Textarea.vue';
 import Dialog from './components/Dialog.vue';
 import Button from './components/Button.vue';
+import NavMenu from './components/NavMenu.vue';
 import Filechooser from './components/Filechooser.vue';
 import IconHover from './components/IconHover.vue';
 import { apiBaseUrl } from './api/api';
@@ -119,6 +129,7 @@ import {
   InformationCircleIcon,
   ArrowDownOnSquareIcon,
   TrashIcon,
+  Bars3Icon,
 } from '@heroicons/vue/24/solid';
 import {
   ArrowDownOnSquareIcon as ArrowDownOnSquareIconSolid,
@@ -126,6 +137,13 @@ import {
 } from '@heroicons/vue/24/outline';
 import CodePreview from './components/CodePreview.vue';
 import { formatBytes } from './helper';
+
+const showMenu = ref(false);
+const navigationItems = ref([
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about' },
+  { name: 'Services', href: '/services' },
+]);
 
 const showProgress = ref(false);
 const progressVal = ref(0);
@@ -157,6 +175,11 @@ const tabs = ref([
     id: 2,
   },
 ] as TabItem[]);
+
+const toggleMenu = (e: MouseEvent) => {
+  e.stopPropagation();
+  showMenu.value = !showMenu.value;
+};
 
 const handleClipboardSuccess = () => setStatus('Erfolgreich kopiert');
 const handleClipboardFail = () => setStatus('Kopieren hat fehlgeschlagen');
@@ -287,9 +310,8 @@ const handleFileToDeleteDialog = (deleteFile: boolean) => {
           handleUploadGet();
         }
       })
-      .catch(() => setStatus(`${fileToDelete.value} konnte nicht gelöscht werden`));
+      .catch(() => setStatus(`${fileToDelete.value} konnte nicht gelöscht werden`))
+      .finally(() => (fileToDelete.value = ''));
   }
-
-  fileToDelete.value = '';
 };
 </script>
