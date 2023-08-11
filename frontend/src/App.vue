@@ -10,14 +10,20 @@
       </div>
     </header>
     <main>
-      <RouterView />
+      <RouterView v-slot="{ Component, route }">
+        <Transition name="page" mode="out-in">
+          <div :key="route.name ?? ''">
+            <component :is="Component" />
+          </div>
+        </Transition>
+      </RouterView>
     </main>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { RouterView } from 'vue-router';
-import { ref } from 'vue';
+import { Transition, ref } from 'vue';
 import { Bars3Icon } from '@heroicons/vue/24/solid';
 import NavMenu from './components/NavMenu.vue';
 import router, { routes } from './router';
@@ -35,3 +41,18 @@ router.beforeEach(async (to, from) => {
 const showMenu = ref(false);
 const navigationItems = ref(routes.map(route => ({ name: route.name, href: route.path })));
 </script>
+
+<style type="postcss">
+.page-enter-active,
+.page-leave-active {
+  transition-duration: 150ms;
+  transition-property: opacity;
+  will-change: opacity;
+  transition-timing-function: ease;
+}
+
+.page-enter,
+.page-leave-active {
+  opacity: 0;
+}
+</style>
