@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import Tabs, { TabItem } from './../components/Tabs.vue';
 import Textarea from './../components/Textarea.vue';
 import Dialog from './../components/Dialog.vue';

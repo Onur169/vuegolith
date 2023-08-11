@@ -1,8 +1,14 @@
 <template>
   <div
-    class="flex flex-row items-center justify-center font-regular w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary p-3 select-none"
+    class="select-none flex flex-row items-center justify-center font-regular w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary md:p-3"
   >
-    <slot></slot> {{ computedLogDate }}: {{ text }}
+    <slot></slot>
+    <div
+      class="overflow-hidden text-ellipsis whitespace-nowrap w-3/4 md:w-auto"
+      @click="handleClick"
+    >
+      {{ computedLogDate }}: {{ text }}
+    </div>
   </div>
 </template>
 
@@ -19,6 +25,8 @@ interface Props {
 const props = defineProps<Props>();
 const { text, logDate } = toRefs(props);
 
+const isTouchDevice = matchMedia('(pointer: coarse)').matches;
+
 const computedLogDate = ref<string>('');
 
 const updateLogDate = () => {
@@ -30,6 +38,12 @@ const updateLogDate = () => {
       })
     : '';
   computedLogDate.value = distanceNow;
+};
+
+const handleClick = () => {
+  if (isTouchDevice) {
+    alert(`${computedLogDate.value}: ${text.value}`);
+  }
 };
 
 onMounted(() => {
