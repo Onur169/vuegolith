@@ -2,6 +2,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx,vue}'],
   theme: {
     extend: {
+      screens: {
+        betterhover: { raw: '(hover: hover)' },
+      },
       colors: {
         primary: '#1A2238', // Dunkles Blaugrau (vermutlich Ihr Primärfarbton)
         secondary: '#9DAAF2', // Helles Blaugrau (vermutlich Ihr Sekundärfarbton)

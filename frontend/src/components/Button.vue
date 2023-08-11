@@ -1,7 +1,7 @@
 <template>
   <button
     @click="handleClick"
-    class="select-none rounded-none border-2 border-primary hover:bg-secondary focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm font-bold"
+    class="select-none rounded-none border-2 border-primary betterhover:hover:bg-secondary focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm font-bold"
   >
     <div class="relative">
       <div class="absolute -left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
