@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --mode dev --port 1234",
-    "prod": "vite --mode prod --port 1234",
+    "dev": "vite --mode dev --port 1234 --host 0.0.0.0",
+    "prod": "vite --mode prod --port 1234 --host 0.0.0.0",
     "build": "./build.sh",
     "publish": "./publish.sh",
     "publish-dev": "VITE_ENV=dev npm run publish",
