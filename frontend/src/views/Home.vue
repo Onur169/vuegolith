@@ -183,7 +183,6 @@ const handleUploadGet = () => {
 };
 
 const handleTabChange = (name: string) => {
-  console.log(name);
   if (name === 'log') {
     handleLogGet();
   }

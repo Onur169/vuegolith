@@ -33,8 +33,7 @@ const toggleMenu = (e: MouseEvent) => {
   showMenu.value = !showMenu.value;
 };
 
-router.beforeEach(async (to, from) => {
-  console.log(to, from);
+router.beforeEach(async () => {
   showMenu.value = false;
 });
 

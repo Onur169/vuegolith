@@ -47,15 +47,11 @@ const handleClick = () => {
 };
 
 onMounted(() => {
-  console.log('mounted');
   updateLogDate();
-
   const timer = setInterval(updateLogDate, 1000 * 10);
 
   onUnmounted(() => {
-    console.log('unmounted');
     clearInterval(timer);
-
     emit('destroy');
   });
 });

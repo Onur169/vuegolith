@@ -12,6 +12,7 @@
           v-for="(item, index) in items"
           :key="index"
           class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary cursor-pointer font-medium uppercase"
+          :class="{ 'bg-secondary': router.currentRoute.value.path == item.href }"
         >
           <RouterLink class="text-black font-bold w-full items-stretch flex p-3" :to="item.href">{{
             item.name
@@ -25,6 +26,7 @@
 <script setup lang="ts">
 import { toRefs, ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import router from '../router';
 
 export interface NavItem {
   name: string;
