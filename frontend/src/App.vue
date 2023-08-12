@@ -12,7 +12,7 @@
       />
     </header>
     <main class="flex w-full justify-center items-center">
-      <div class="w-3/4 md:w-4/5 mt-12">
+      <div class="w-4/5 md:w-3/4 mt-12">
         <RouterView v-slot="{ Component, route }">
           <Transition name="page" mode="out-in">
             <div :key="route.name ?? ''">
