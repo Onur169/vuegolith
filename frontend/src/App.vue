@@ -5,21 +5,22 @@
         @click="openMenu"
         class="h-5 w-5 md:h-9 md:w-9 fixed top-2 right-4 z-10 cursor-pointer hover:opacity-[.65]"
       />
-
       <NavMenu
         :items="navigationItems"
         :showMenu="showMenu"
         @outsideClick="handleOutsideClickMenu"
       />
     </header>
-    <main>
-      <RouterView v-slot="{ Component, route }">
-        <Transition name="page" mode="out-in">
-          <div :key="route.name ?? ''">
-            <component :is="Component" />
-          </div>
-        </Transition>
-      </RouterView>
+    <main class="flex w-full justify-center items-center">
+      <div class="w-3/4 md:w-4/5 mt-12">
+        <RouterView v-slot="{ Component, route }">
+          <Transition name="page" mode="out-in">
+            <div :key="route.name ?? ''">
+              <component :is="Component" />
+            </div>
+          </Transition>
+        </RouterView>
+      </div>
     </main>
   </div>
 </template>

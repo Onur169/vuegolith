@@ -9,90 +9,77 @@
     </div>
   </Dialog>
   <Progressbar :percentage="progressVal" class="fixed top-0 left-0" v-show="showProgress" />
-  <div class="flex flex-col items-center justify-center mt-6 md:mt-3">
-    <div class="flex flex-col justify-center w-full p-6 md:w-3/4">
-      <Tabs :tabs="tabs" @changed="handleTabChange">
-        <template v-slot:default="{ tab, activeTab }">
-          <template v-if="'upload' === activeTab">
-            <Filechooser :reset="shouldResetFileChooser" @files="handleFilesSelected" />
-            <hr
-              class="my-6 bg-primary border border-primary"
-              v-if="fetchedUploadsList?.length > 0"
-            />
-            <ul class="flex flex-col" v-if="fetchedUploadsList?.length > 0">
-              <li
-                class="flex flex-row justify-between items-center font-regular select-none hover:bg-secondary w-12- h-12 p-3 mb-6 outline hover:outline-primary hover:shadow-md"
-                v-for="(uploadedFile, index) in fetchedUploadsList"
-                :key="index"
-              >
-                <a
-                  :href="`${apiBaseUrl}uploads/${uploadedFile.name}`"
-                  :data-text="uploadedFile.name"
-                  target="_blank"
-                  >{{ uploadedFile.name }} ({{ formatBytes(uploadedFile.size) }})</a
-                >
-                <div class="flex flex-row gap-x-3">
-                  <IconHover>
-                    <template #default="{ hover, hovered }">
-                      <div
-                        @mouseenter="hover(true)"
-                        @mouseleave="hover(false)"
-                        @click="
-                          handleDownload(
-                            `${apiBaseUrl}uploads/${uploadedFile.name}`,
-                            uploadFile.name,
-                          )
-                        "
-                      >
-                        <ArrowDownOnSquareIcon class="h-6 w-6 cursor-pointer" v-show="hovered" />
-                        <ArrowDownOnSquareIconSolid
-                          class="h-6 w-6 cursor-pointer"
-                          v-show="!hovered"
-                        />
-                      </div>
-                    </template>
-                  </IconHover>
+  <Tabs :tabs="tabs" @changed="handleTabChange">
+    <template v-slot:default="{ tab, activeTab }">
+      <template v-if="'upload' === activeTab">
+        <Filechooser :reset="shouldResetFileChooser" @files="handleFilesSelected" />
+        <hr class="my-6 bg-primary border border-primary" v-if="fetchedUploadsList?.length > 0" />
+        <ul class="flex flex-col" v-if="fetchedUploadsList?.length > 0">
+          <li
+            class="flex flex-row justify-between items-center font-regular select-none hover:bg-secondary w-12- h-12 p-3 mb-6 outline hover:outline-primary hover:shadow-md"
+            v-for="(uploadedFile, index) in fetchedUploadsList"
+            :key="index"
+          >
+            <a
+              :href="`${apiBaseUrl}uploads/${uploadedFile.name}`"
+              :data-text="uploadedFile.name"
+              target="_blank"
+              >{{ uploadedFile.name }} ({{ formatBytes(uploadedFile.size) }})</a
+            >
+            <div class="flex flex-row gap-x-3">
+              <IconHover>
+                <template #default="{ hover, hovered }">
+                  <div
+                    @mouseenter="hover(true)"
+                    @mouseleave="hover(false)"
+                    @click="
+                      handleDownload(`${apiBaseUrl}uploads/${uploadedFile.name}`, uploadFile.name)
+                    "
+                  >
+                    <ArrowDownOnSquareIcon class="h-6 w-6 cursor-pointer" v-show="hovered" />
+                    <ArrowDownOnSquareIconSolid class="h-6 w-6 cursor-pointer" v-show="!hovered" />
+                  </div>
+                </template>
+              </IconHover>
 
-                  <IconHover>
-                    <template #default="{ hover, hovered }">
-                      <div
-                        class=""
-                        @mouseenter="hover(true)"
-                        @mouseleave="hover(false)"
-                        @click="handleDelete(uploadedFile.name)"
-                      >
-                        <TrashIcon class="h-6 w-6 cursor-pointer" v-show="hovered" />
-                        <TrashIconSolid class="h-6 w-6 cursor-pointer" v-show="!hovered" />
-                      </div>
-                    </template>
-                  </IconHover>
-                </div>
-              </li>
-            </ul>
-          </template>
-          <template v-if="'log' === activeTab">
-            <Textarea class="mb-4" @content="handleLogContent" :value="logContent" />
-            <Button
-              class="mb-4 w-full font-medium"
-              text="Speichern"
-              :isLoading="isLoading"
-              @clicked="handleLogButton"
-            />
-            <CodePreview
-              @clipboardSuccess="handleClipboardSuccess"
-              @clipboardFail="handleClipboardFail"
-              :content="fetchedLogContent"
-            />
-          </template>
-        </template>
-      </Tabs>
-      <StatusBar :text="statusText" :logDate="lastActionDate">
-        <template v-slot>
-          <InformationCircleIcon class="h-6 w-6 mr-1.5" />
-        </template>
-      </StatusBar>
-    </div>
-  </div>
+              <IconHover>
+                <template #default="{ hover, hovered }">
+                  <div
+                    class=""
+                    @mouseenter="hover(true)"
+                    @mouseleave="hover(false)"
+                    @click="handleDelete(uploadedFile.name)"
+                  >
+                    <TrashIcon class="h-6 w-6 cursor-pointer" v-show="hovered" />
+                    <TrashIconSolid class="h-6 w-6 cursor-pointer" v-show="!hovered" />
+                  </div>
+                </template>
+              </IconHover>
+            </div>
+          </li>
+        </ul>
+      </template>
+      <template v-if="'log' === activeTab">
+        <Textarea class="mb-4" @content="handleLogContent" :value="logContent" />
+        <Button
+          class="mb-4 w-full font-medium"
+          text="Speichern"
+          :isLoading="isLoading"
+          @clicked="handleLogButton"
+        />
+        <CodePreview
+          @clipboardSuccess="handleClipboardSuccess"
+          @clipboardFail="handleClipboardFail"
+          :content="fetchedLogContent"
+        />
+      </template>
+    </template>
+  </Tabs>
+  <StatusBar :text="statusText" :logDate="lastActionDate">
+    <template v-slot>
+      <InformationCircleIcon class="h-6 w-6 mr-1.5" />
+    </template>
+  </StatusBar>
 </template>
 
 <script setup lang="tsx">
