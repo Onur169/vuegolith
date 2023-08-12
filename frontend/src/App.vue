@@ -2,12 +2,15 @@
   <div>
     <header>
       <Bars3Icon
-        @click="toggleMenu"
-        class="h-5 w-5 md:h-9 md:w-9 fixed top-2 right-4 cursor-pointer hover:opacity-[.65]"
+        @click="openMenu"
+        class="h-5 w-5 md:h-9 md:w-9 fixed top-2 right-4 z-10 cursor-pointer hover:opacity-[.65]"
       />
-      <div v-if="showMenu">
-        <NavMenu :items="navigationItems" @outsideClick="showMenu = false" />
-      </div>
+
+      <NavMenu
+        :items="navigationItems"
+        :showMenu="showMenu"
+        @outsideClick="handleOutsideClickMenu"
+      />
     </header>
     <main>
       <RouterView v-slot="{ Component, route }">
@@ -28,9 +31,13 @@ import { Bars3Icon } from '@heroicons/vue/24/solid';
 import NavMenu from './components/NavMenu.vue';
 import router, { routes } from './router';
 
-const toggleMenu = (e: MouseEvent) => {
+const handleOutsideClickMenu = () => {
+  showMenu.value = false;
+};
+
+const openMenu = (e: MouseEvent) => {
   e.stopPropagation();
-  showMenu.value = !showMenu.value;
+  showMenu.value = true;
 };
 
 router.beforeEach(async () => {

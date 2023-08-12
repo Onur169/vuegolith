@@ -1,22 +1,27 @@
 <template>
   <div
-    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
+    class="fixed top-0 right-0 transition-transform ease-in-out translate-x-full z-20 w-full md:w-96"
     @click="closeMenuOutside"
+    :class="{ 'translate-x-0': showMenu }"
   >
-    <nav
-      class="bg-white p-8 shadow-md w-full sm:w-[calc(50vw-1rem)] m-3 sm:m-0 h-auto"
-      ref="menuRef"
-    >
+    <nav class="bg-white shadow-md p-8 h-screen" ref="menuRef">
       <ul class="list-none p-0">
         <li
           v-for="(item, index) in items"
           :key="index"
-          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary cursor-pointer font-medium uppercase"
-          :class="{ 'bg-secondary': router.currentRoute.value.path == item.href }"
+          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary font-medium uppercase flex items-stretch p-4"
+          :class="{
+            'bg-secondary underline underline-offset-4':
+              router.currentRoute.value.path == item.href,
+          }"
         >
-          <RouterLink class="text-black font-bold w-full items-stretch flex p-3" :to="item.href">{{
-            item.name
-          }}</RouterLink>
+          <RouterLink
+            class="w-full"
+            :to="item.href"
+            v-if="router.currentRoute.value.path !== item.href"
+            >{{ item.name }}</RouterLink
+          >
+          <span v-else>{{ item.name }}</span>
         </li>
       </ul>
     </nav>
@@ -35,6 +40,7 @@ export interface NavItem {
 
 interface Props {
   items: NavItem[];
+  showMenu: boolean;
 }
 
 const menuRef = ref<HTMLElement | null>(null);
@@ -55,5 +61,5 @@ onUnmounted(() => {
 
 const emit = defineEmits(['outsideClick']);
 const props = defineProps<Props>();
-const { items } = toRefs(props);
+const { items, showMenu } = toRefs(props);
 </script>
