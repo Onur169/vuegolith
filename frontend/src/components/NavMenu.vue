@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed top-0 right-0 transition-transform ease-in-out translate-x-full z-50 w-full md:w-96"
+    class="fixed top-0 right-0 transition-transform will-change-transform ease-in-out translate-x-full z-50 w-full md:w-96"
     @click="closeMenuOutside"
     :class="{ '!translate-x-0': showMenu }"
   >

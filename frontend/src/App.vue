@@ -1,16 +1,21 @@
 <template>
   <div class="flex justify-center">
     <div class="w-4/5 md:w-3/4">
-      <header class="flex flex-row items-center justify-between py-6">
+      <header
+        class="fixed flex flex-row items-center justify-between p-3 w-4/5 md:w-3/4 bg-white/40 drop-shadow-sm backdrop-blur-sm"
+      >
         <div
           class="antialiased gap-x-3 text-center font-regular uppercase select-none flex flex-row items-center justify-center w-auto"
         >
-          <h1 class="text-xl md:text-3xl">Vuegolith</h1>
-          <p>Vue + Go</p>
+          <h1 class="text-xl md:text-3xl font-bold white-text-shadow">
+            <RouterLink to="/">Vuegolith</RouterLink>
+          </h1>
+          <p class="font-bold italic white-text-shadow">Vue + Go ⚡</p>
         </div>
         <Bars3Icon
           @click="openMenu"
-          class="h-5 w-5 md:h-9 md:w-9 cursor-pointer hover:opacity-[.65]"
+          class="h-7 w-7 md:h-9 md:w-9 cursor-pointer hover:opacity-[.65]"
+          v-if="!showMenu"
         />
       </header>
       <NavMenu
@@ -18,7 +23,7 @@
         :showMenu="showMenu"
         @outsideClick="handleOutsideClickMenu"
       />
-      <main class="flex w-full justify-center items-center">
+      <main class="flex w-full justify-center items-center mt-20 md:mt-24">
         <div class="w-full">
           <RouterView v-slot="{ Component, route }">
             <Transition name="page" mode="out-in">
@@ -34,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { RouterView } from 'vue-router';
+import { RouterView, RouterLink } from 'vue-router';
 import { Transition, ref } from 'vue';
 import { Bars3Icon } from '@heroicons/vue/24/solid';
 import NavMenu from './components/NavMenu.vue';

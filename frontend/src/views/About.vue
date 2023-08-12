@@ -1,12 +1,12 @@
 <template>
-  <h1 class="text-3xl font-bold mb-4">About</h1>
+  <h1 class="text-3xl font-bold mb-4">About 📚</h1>
   <p class="font-regular mb-4">
     Willkommen bei Vuegolith! Dieses Projekt ermöglicht es, schnell Projekte aufzusetzen, die
     Backend und Frontend in einer Einheit vereinen. Vuegolith strebt danach, eine
     benutzerfreundliche Benutzeroberfläche für verschiedene Aufgaben anzubieten.
   </p>
 
-  <h2 class="text-2xl font-bold mb-4">Verwendete Technologien</h2>
+  <h2 class="text-2xl font-bold mb-4">Verwendete Technologien 🛠️</h2>
   <div class="flex space-x-4 mt-2 mb-8">
     <img src="./../assets/img/ts-logo.svg" alt="TypeScript Logo" class="w-10 h-10" />
     <img src="./../assets/img/vue-logo.svg" alt="Vue.js Logo" class="w-10 h-10" />
@@ -14,7 +14,7 @@
     <img src="./../assets/img/go-logo.svg" alt="Go Logo" class="w-10 h-10" />
   </div>
 
-  <h3 class="text-xl font-semibold mb-4">Effiziente Backend-Entwicklung mit Go</h3>
+  <h3 class="text-xl font-semibold mb-4">Effiziente Backend-Entwicklung mit Go 🚀</h3>
   <p class="font-regular mb-4">
     Die Nutzung von Go als Backend-Programmiersprache bietet eine hohe Effizienz und Performance. Go
     zeichnet sich durch seine Kompiliergeschwindigkeit, geringen Speicherverbrauch und
@@ -23,7 +23,7 @@
     funktionieren.
   </p>
 
-  <h3 class="text-xl font-semibold mb-4">Modulares Frontend mit Vue.js</h3>
+  <h3 class="text-xl font-semibold mb-4">Modulares Frontend mit Vue.js 🧩</h3>
   <p class="font-regular mb-4">
     Vue.js ist eine moderne JavaScript-Framework, das eine komponentenbasierte Architektur
     unterstützt. Die Verwendung von Vue.js ermöglicht eine modulare Frontend-Entwicklung, bei der
@@ -31,7 +31,7 @@
     Dadurch wird der Entwicklungsprozess beschleunigt und die Wartbarkeit des Codes verbessert.
   </p>
 
-  <h3 class="text-xl font-semibold mb-4">Statische Typisierung mit TypeScript</h3>
+  <h3 class="text-xl font-semibold mb-4">Statische Typisierung mit TypeScript 🔍</h3>
   <p class="font-regular mb-4">
     Die Integration von TypeScript in Vue.js ermöglicht eine statische Typisierung des Codes. Dies
     führt zu einer höheren Code-Qualität, da Typfehler bereits während der Entwicklung erkannt
@@ -39,7 +39,7 @@
     im Team und reduzieren potenzielle Fehlerquellen.
   </p>
 
-  <h3 class="text-xl font-semibold mb-4">Warum Tailwind CSS?</h3>
+  <h3 class="text-xl font-semibold mb-4">Warum Tailwind CSS? 💡</h3>
   <p class="font-regular mb-4">
     Die Integration von Tailwind CSS in diesem Projekt bringt eine Vielzahl von Vorteilen mit sich.
     Tailwind CSS bietet einen einzigartigen Ansatz zur Gestaltung von Benutzeroberflächen. Durch die
