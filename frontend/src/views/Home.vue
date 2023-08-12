@@ -16,7 +16,7 @@
         <hr class="my-6 bg-primary border border-primary" v-if="fetchedUploadsList?.length > 0" />
         <ul class="flex flex-col" v-if="fetchedUploadsList?.length > 0">
           <li
-            class="flex flex-row justify-between items-center font-regular select-none hover:bg-secondary w-12- h-12 p-3 mb-6 outline hover:outline-primary hover:shadow-md"
+            class="flex flex-row justify-between items-center font-regular select-none betterhover:hover:bg-secondary w-12- h-12 p-3 mb-6 outline hover:outline-primary hover:shadow-md"
             v-for="(uploadedFile, index) in fetchedUploadsList"
             :key="index"
           >
