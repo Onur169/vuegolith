@@ -18,7 +18,7 @@
       </Tab>
     </TabList>
     <TabPanels>
-      <TabPanel v-for="(tab, idx) in tabs" :key="idx" :class="['rounded-none bg-white']">
+      <TabPanel v-for="(tab, idx) in tabs" :key="idx" :class="['rounded-none bg-transparent']">
         <slot :tab="tab" :activeTab="activeTab"></slot>
       </TabPanel>
     </TabPanels>

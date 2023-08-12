@@ -1,10 +1,13 @@
 <template>
   <div
-    class="fixed top-0 right-0 transition-transform ease-in-out translate-x-full z-20 w-full md:w-96"
+    class="fixed top-0 right-0 transition-transform ease-in-out translate-x-full z-50 w-full md:w-96"
     @click="closeMenuOutside"
-    :class="{ 'translate-x-0': showMenu }"
+    :class="{ '!translate-x-0': showMenu }"
   >
-    <nav class="bg-white shadow-md p-8 h-screen" ref="menuRef">
+    <nav
+      class="bg-white md:bg-transparent bg-gradient-to-r from-secondary/50 to-primary/10 p-8 h-screen"
+      ref="menuRef"
+    >
       <ul class="list-none p-0">
         <li
           v-for="(item, index) in items"

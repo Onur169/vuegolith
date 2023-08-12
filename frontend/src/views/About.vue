@@ -87,6 +87,6 @@
     zögern Sie nicht, sich an die Vuegolith-Community um Unterstützung zu wenden.
   </p>
 
-  <p class="mb-4 font-regular">Viel Spaß beim Codieren! 🚀</p>
+  <p class="mb-4 font-regular">Viel Spaß beim Entwickeln! 🚀</p>
 </template>
 <script lang="ts" setup></script>

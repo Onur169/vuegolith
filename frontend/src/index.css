@@ -23,3 +23,7 @@
   font-weight: 700;
   src: url('./assets/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
 }
+
+.text-balance {
+  text-wrap: balance;
+}

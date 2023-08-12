@@ -1,27 +1,35 @@
 <template>
-  <div>
-    <header>
-      <Bars3Icon
-        @click="openMenu"
-        class="h-5 w-5 md:h-9 md:w-9 fixed top-2 right-4 z-10 cursor-pointer hover:opacity-[.65]"
-      />
+  <div class="flex justify-center">
+    <div class="w-4/5 md:w-3/4">
+      <header class="flex flex-row items-center justify-between py-6">
+        <div
+          class="antialiased gap-x-3 text-center font-regular uppercase select-none flex flex-row items-center justify-center w-auto"
+        >
+          <h1 class="text-xl md:text-3xl">Vuegolith</h1>
+          <p>Vue + Go</p>
+        </div>
+        <Bars3Icon
+          @click="openMenu"
+          class="h-5 w-5 md:h-9 md:w-9 cursor-pointer hover:opacity-[.65]"
+        />
+      </header>
       <NavMenu
         :items="navigationItems"
         :showMenu="showMenu"
         @outsideClick="handleOutsideClickMenu"
       />
-    </header>
-    <main class="flex w-full justify-center items-center">
-      <div class="w-4/5 md:w-3/4 mt-12">
-        <RouterView v-slot="{ Component, route }">
-          <Transition name="page" mode="out-in">
-            <div :key="route.name ?? ''">
-              <component :is="Component" />
-            </div>
-          </Transition>
-        </RouterView>
-      </div>
-    </main>
+      <main class="flex w-full justify-center items-center">
+        <div class="w-full">
+          <RouterView v-slot="{ Component, route }">
+            <Transition name="page" mode="out-in">
+              <div :key="route.name ?? ''">
+                <component :is="Component" />
+              </div>
+            </Transition>
+          </RouterView>
+        </div>
+      </main>
+    </div>
   </div>
 </template>
 
