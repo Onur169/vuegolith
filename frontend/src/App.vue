@@ -2,21 +2,23 @@
   <div class="flex justify-center">
     <div class="w-4/5 md:w-3/4">
       <header
-        class="fixed flex flex-row items-center justify-between p-3 w-4/5 md:w-3/4 bg-white/40 drop-shadow-sm backdrop-blur-sm"
+        class="fixed flex flex-row items-center justify-between p-3 w-4/5 md:w-3/4 bg-white/40 drop-shadow-sm backdrop-blur-sm shadow-lg"
       >
         <div
           class="antialiased gap-x-3 text-center font-regular uppercase select-none flex flex-row items-center justify-center w-auto"
         >
           <h1 class="text-xl md:text-3xl font-bold white-text-shadow">
-            <RouterLink to="/">Vuegolith</RouterLink>
+            <RouterLink to="/" class="focus-style">Vuegolith</RouterLink>
           </h1>
           <p class="font-bold italic white-text-shadow">Vue + Go ⚡</p>
         </div>
-        <Bars3Icon
-          @click="openMenu"
-          class="h-7 w-7 md:h-9 md:w-9 cursor-pointer hover:opacity-[.65]"
-          v-if="!showMenu"
-        />
+        <button class="focus-style" @focus="openMenu">
+          <Bars3Icon
+            @click="openMenu"
+            class="h-7 w-7 md:h-9 md:w-9 cursor-pointer hover:opacity-[.65] betterhover:hover:shadow-lg betterhover:hover:rounded-full betterhover:hover:p-1 betterhover:hover:scale-125 transition-all"
+            v-if="!showMenu"
+          />
+        </button>
       </header>
       <NavMenu
         :items="navigationItems"
@@ -49,7 +51,7 @@ const handleOutsideClickMenu = () => {
   showMenu.value = false;
 };
 
-const openMenu = (e: MouseEvent) => {
+const openMenu = (e: MouseEvent | FocusEvent) => {
   e.stopPropagation();
   showMenu.value = true;
 };

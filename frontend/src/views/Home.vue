@@ -24,6 +24,7 @@
               :href="`${apiBaseUrl}uploads/${uploadedFile.name}`"
               :data-text="uploadedFile.name"
               target="_blank"
+              class="overflow-hidden text-ellipsis whitespace-nowrap"
               >{{ uploadedFile.name }} ({{ formatBytes(uploadedFile.size) }})</a
             >
             <div class="flex flex-row gap-x-3">
@@ -45,7 +46,6 @@
               <IconHover>
                 <template #default="{ hover, hovered }">
                   <div
-                    class=""
                     @mouseenter="hover(true)"
                     @mouseleave="hover(false)"
                     @click="handleDelete(uploadedFile.name)"
