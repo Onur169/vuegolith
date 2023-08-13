@@ -55,8 +55,8 @@ interface Props {
 
 const menuRef = ref<HTMLElement | null>(null);
 
-const closeMenuOutside = (event: MouseEvent) => {
-  if (menuRef.value && !menuRef.value.contains(event.target as Node)) {
+const closeMenuOutside = (e: MouseEvent) => {
+  if (menuRef.value && !menuRef.value.contains(e.target as Node)) {
     emit('close');
   }
 };

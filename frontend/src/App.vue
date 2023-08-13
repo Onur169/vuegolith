@@ -41,7 +41,7 @@ import { RouterView, RouterLink } from 'vue-router';
 import { Transition, ref } from 'vue';
 import { Bars3Icon } from '@heroicons/vue/24/solid';
 import NavMenu from './components/NavMenu.vue';
-import router, { routes } from './router';
+import { routes } from './router';
 import { RouteConfig } from './router';
 
 const handleCloseMenu = () => {
@@ -52,10 +52,6 @@ const openMenu = (e: MouseEvent | FocusEvent) => {
   e.stopPropagation();
   showMenu.value = true;
 };
-
-router.beforeEach(async () => {
-  showMenu.value = false;
-});
 
 const showMenu = ref(false);
 const navigationItems = ref<RouteConfig[]>(routes);
