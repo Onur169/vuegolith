@@ -16,11 +16,16 @@
         <li
           v-for="(item, index) in items"
           :key="index"
-          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary font-medium uppercase"
-          :class="{
-            'bg-secondary underline underline-offset-4':
-              router.currentRoute.value.path == item.path,
-          }"
+          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary font-medium uppercase transition-all"
+          :class="[
+            {
+              'bg-secondary underline underline-offset-4':
+                router.currentRoute.value.path == item.path,
+            },
+            {
+              'bg-white': router.currentRoute.value.path != item.path,
+            },
+          ]"
         >
           <RouterLink
             class="w-full p-4 flex justify-start items-center"
