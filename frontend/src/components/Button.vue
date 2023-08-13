@@ -1,5 +1,6 @@
 <template>
   <button
+    v-ripple
     @click="handleClick"
     class="select-none rounded-none border-2 border-primary betterhover:hover:bg-secondary focus-visible:border-highlight outline-none p-3 flex flex-row justify-center items-center text-sm font-bold"
   >

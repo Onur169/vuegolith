@@ -1871,12 +1871,7 @@
   "resolved" "https://registry.npmjs.org/svg-tags/-/svg-tags-1.0.0.tgz"
   "version" "1.0.0"
 
-"tailwind-scrollbar@^3.0.5":
-  "integrity" "sha512-0ZwxTivevqq9BY9fRP9zDjHl7Tu+J5giBGbln+0O1R/7nHtBUKnjQcA1aTIhK7Oyjp6Uc/Dj6/dn8Dq58k5Uww=="
-  "resolved" "https://registry.npmjs.org/tailwind-scrollbar/-/tailwind-scrollbar-3.0.5.tgz"
-  "version" "3.0.5"
-
-"tailwindcss@^3.3.3", "tailwindcss@3.x":
+"tailwindcss@^3.3.3":
   "integrity" "sha512-A0KgSkef7eE4Mf+nKJ83i75TMyq8HqY3qmFIJSWy8bNt0v1lG7jUcpGpoTFxAwYcWOphcTBLPPJg+bDfhDf52w=="
   "resolved" "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.3.3.tgz"
   "version" "3.3.3"
@@ -1992,6 +1987,11 @@
     "rollup" "^3.25.2"
   optionalDependencies:
     "fsevents" "~2.3.2"
+
+"vue-create-ripple@^0.3.1":
+  "integrity" "sha512-rgMpGODs/ZG/SNIJzLj+evFCfOvIObScr7Acy3Kl3IgOFbc6w0E1baE98kb0y870VH0FePhtXgcb1WGviQC+/Q=="
+  "resolved" "https://registry.npmjs.org/vue-create-ripple/-/vue-create-ripple-0.3.1.tgz"
+  "version" "0.3.1"
 
 "vue-eslint-parser@^9.3.1":
   "integrity" "sha512-Clr85iD2XFZ3lJ52/ppmUDG/spxQu6+MAeHXjjyI4I1NUYZ9xmenQp4N0oaHJhrA8OOxltCVxMRfANGa70vU0g=="

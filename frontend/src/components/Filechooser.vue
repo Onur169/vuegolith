@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, toRefs, onMounted } from 'vue';
+import { ref, watch, toRefs } from 'vue';
 
 interface FileChooserProps {
   accept?: string;
