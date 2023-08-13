@@ -42,6 +42,7 @@ import { Transition, ref } from 'vue';
 import { Bars3Icon } from '@heroicons/vue/24/solid';
 import NavMenu from './components/NavMenu.vue';
 import router, { routes } from './router';
+import { RouteConfig } from './router';
 
 const handleCloseMenu = () => {
   showMenu.value = false;
@@ -57,7 +58,7 @@ router.beforeEach(async () => {
 });
 
 const showMenu = ref(false);
-const navigationItems = ref(routes.map(route => ({ name: route.name, href: route.path })));
+const navigationItems = ref<RouteConfig[]>(routes);
 </script>
 
 <style type="postcss">

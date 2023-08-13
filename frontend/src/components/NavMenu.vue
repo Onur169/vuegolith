@@ -16,19 +16,21 @@
         <li
           v-for="(item, index) in items"
           :key="index"
-          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary font-medium uppercase flex items-stretch"
+          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary font-medium uppercase"
           :class="{
             'bg-secondary underline underline-offset-4':
-              router.currentRoute.value.path == item.href,
+              router.currentRoute.value.path == item.path,
           }"
         >
           <RouterLink
-            class="w-full p-4"
-            :to="item.href"
-            v-if="router.currentRoute.value.path !== item.href"
-            >{{ item.name }}</RouterLink
+            class="w-full p-4 flex justify-start items-center"
+            :to="item.path"
+            v-if="router.currentRoute.value.path !== item.path"
+            ><component :is="item.icon" class="ml-4 w-8 h-8 mr-2" />{{ item.name }}</RouterLink
           >
-          <span class="w-full p-4" v-else>{{ item.name }}</span>
+          <span class="w-full p-4 flex justify-start items-center" v-else
+            ><component :is="item.icon" class="ml-4 w-8 h-8 mr-2" />{{ item.name }}</span
+          >
         </li>
       </ul>
     </nav>
@@ -38,16 +40,11 @@
 <script setup lang="ts">
 import { toRefs, ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
-import router from '../router';
+import router, { RouteConfig } from '../router';
 import { XMarkIcon } from '@heroicons/vue/24/solid';
 
-export interface NavItem {
-  name: string;
-  href: string;
-}
-
 interface Props {
-  items: NavItem[];
+  items: RouteConfig[];
   showMenu: boolean;
 }
 
