@@ -2,15 +2,13 @@
   <div
     class="select-none flex flex-row items-center justify-center font-regular w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary md:p-3"
   >
-    <div
-      class="overflow-hidden text-ellipsis whitespace-nowrap w-3/4 md:w-auto"
-      @click="handleClick"
-      :style="{ '--custom-transition-duration': '300ms' }"
-    >
+    <div @click="handleClick" :style="{ '--custom-transition-duration': '300ms' }">
       <Transition name="fade" mode="out-in">
-        <div class="flex flex-row" :key="new Date().getTime()">
-          <slot v-if="computedLogDate"></slot
-          >{{ computedLogDate ? `${computedLogDate}: ${text}` : `` }}
+        <div class="flex flex-row items-center justify-center" :key="new Date().getTime()">
+          <slot v-if="computedLogDate"></slot>
+          <div class="overflow-hidden text-ellipsis whitespace-nowrap w-3/4 md:w-auto">
+            {{ computedLogDate ? `${computedLogDate}: ${text}` : `` }}
+          </div>
         </div></Transition
       >
     </div>
