@@ -8,7 +8,10 @@
       class="bg-white md:bg-transparent bg-gradient-to-r from-secondary/50 to-primary/10 p-8 h-screen relative"
       ref="menuRef"
     >
-      <XMarkIcon class="h-7 w-7 absolute top-3 right-3 cursor-pointer" @click="emit('close')" />
+      <XMarkIcon
+        class="h-7 w-7 absolute top-3 right-3 cursor-pointer transition-all hover:scale-125"
+        @click="emit('close')"
+      />
       <ul class="list-none p-0 mt-9">
         <li
           v-for="(item, index) in items"
