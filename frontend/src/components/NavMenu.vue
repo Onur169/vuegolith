@@ -5,10 +5,11 @@
     :class="{ '!translate-x-0': showMenu }"
   >
     <nav
-      class="bg-white md:bg-transparent bg-gradient-to-r from-secondary/50 to-primary/10 p-8 h-screen"
+      class="bg-white md:bg-transparent bg-gradient-to-r from-secondary/50 to-primary/10 p-8 h-screen relative"
       ref="menuRef"
     >
-      <ul class="list-none p-0">
+      <XMarkIcon class="h-7 w-7 absolute top-3 right-3 cursor-pointer" @click="emit('close')" />
+      <ul class="list-none p-0 mt-9">
         <li
           v-for="(item, index) in items"
           :key="index"
@@ -35,6 +36,7 @@
 import { toRefs, ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import router from '../router';
+import { XMarkIcon } from '@heroicons/vue/24/solid';
 
 export interface NavItem {
   name: string;
@@ -50,7 +52,7 @@ const menuRef = ref<HTMLElement | null>(null);
 
 const closeMenuOutside = (event: MouseEvent) => {
   if (menuRef.value && !menuRef.value.contains(event.target as Node)) {
-    emit('outsideClick');
+    emit('close');
   }
 };
 
@@ -62,7 +64,7 @@ onUnmounted(() => {
   document.removeEventListener('click', closeMenuOutside);
 });
 
-const emit = defineEmits(['outsideClick']);
+const emit = defineEmits(['close']);
 const props = defineProps<Props>();
 const { items, showMenu } = toRefs(props);
 </script>

@@ -20,11 +20,7 @@
           />
         </button>
       </header>
-      <NavMenu
-        :items="navigationItems"
-        :showMenu="showMenu"
-        @outsideClick="handleOutsideClickMenu"
-      />
+      <NavMenu :items="navigationItems" :showMenu="showMenu" @close="handleCloseMenu" />
       <main class="flex w-full justify-center items-center mt-20 md:mt-24">
         <div class="w-full">
           <RouterView v-slot="{ Component, route }">
@@ -47,7 +43,7 @@ import { Bars3Icon } from '@heroicons/vue/24/solid';
 import NavMenu from './components/NavMenu.vue';
 import router, { routes } from './router';
 
-const handleOutsideClickMenu = () => {
+const handleCloseMenu = () => {
   showMenu.value = false;
 };
 
