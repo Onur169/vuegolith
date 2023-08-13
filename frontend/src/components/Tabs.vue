@@ -7,7 +7,7 @@
             'flex flex-row items-center justify-center uppercase w-full select-none rounded-none py-2.5 text-sm font-medium leading-5 focus:outline-none',
             selected
               ? 'bg-secondary shadow'
-              : 'text-blue-100 transition-all duration-150 hover:bg-white/[0.12] hover:text-white',
+              : 'text-blue-100 transition-all hover:bg-white/[0.12] hover:text-white',
           ]"
           @click="handleTabBtnClick(tab)"
         >
