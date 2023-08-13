@@ -12,19 +12,19 @@
         <li
           v-for="(item, index) in items"
           :key="index"
-          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary font-medium uppercase flex items-stretch p-4"
+          class="select-none mb-4 last:mb-0 w-full border-2 border-primary hover:bg-secondary font-medium uppercase flex items-stretch"
           :class="{
             'bg-secondary underline underline-offset-4':
               router.currentRoute.value.path == item.href,
           }"
         >
           <RouterLink
-            class="w-full"
+            class="w-full p-4"
             :to="item.href"
             v-if="router.currentRoute.value.path !== item.href"
             >{{ item.name }}</RouterLink
           >
-          <span v-else>{{ item.name }}</span>
+          <span class="w-full p-4" v-else>{{ item.name }}</span>
         </li>
       </ul>
     </nav>
