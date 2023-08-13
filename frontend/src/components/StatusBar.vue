@@ -2,18 +2,23 @@
   <div
     class="select-none flex flex-row items-center justify-center font-regular w-full fixed bottom-0 left-0 h-12 border-t border-primary bg-secondary md:p-3"
   >
-    <slot></slot>
     <div
       class="overflow-hidden text-ellipsis whitespace-nowrap w-3/4 md:w-auto"
       @click="handleClick"
+      :style="{ '--custom-transition-duration': '300ms' }"
     >
-      {{ computedLogDate }}: {{ text }}
+      <Transition name="fade" mode="out-in">
+        <div class="flex flex-row" :key="new Date().getTime()">
+          <slot v-if="computedLogDate"></slot
+          >{{ computedLogDate ? `${computedLogDate}: ${text}` : `` }}
+        </div></Transition
+      >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, toRefs } from 'vue';
+import { ref, onMounted, onUnmounted, toRefs, Transition } from 'vue';
 import { formatDistanceToNow } from 'date-fns';
 import { de } from 'date-fns/locale';
 

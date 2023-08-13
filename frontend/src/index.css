@@ -24,10 +24,29 @@
   src: url('./assets/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
 }
 
+/* Custom utilities */
 .text-balance {
   text-wrap: balance;
 }
 
 .focus-style:focus-visible {
   @apply outline outline-accent;
+}
+
+:root {
+  --custom-transition-duration: 150ms;
+}
+
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: var(--custom-transition-duration);
+  transition-property: opacity;
+  will-change: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
 }

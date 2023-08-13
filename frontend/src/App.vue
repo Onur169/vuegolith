@@ -28,7 +28,7 @@
       <main class="flex w-full justify-center items-center mt-20 md:mt-24">
         <div class="w-full">
           <RouterView v-slot="{ Component, route }">
-            <Transition name="page" mode="out-in">
+            <Transition name="fade" mode="out-in">
               <div :key="route.name ?? ''">
                 <component :is="Component" />
               </div>
