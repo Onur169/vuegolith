@@ -6,7 +6,7 @@
       <Transition name="fade" mode="out-in">
         <div class="flex flex-row items-center justify-center" :key="new Date().getTime()">
           <slot v-if="computedLogDate"></slot>
-          <div class="overflow-hidden text-ellipsis whitespace-nowrap w-3/4 md:w-auto">
+          <div class="overflow-hidden text-ellipsis whitespace-nowrap w-3/4 md:w-auto my-3 md:m-0">
             {{ computedLogDate ? `${computedLogDate}: ${text}` : `` }}
           </div>
         </div></Transition
