@@ -47,7 +47,7 @@ func main() {
 	router := routes.SetupRoutes()
 
 	corsHandler := api.CorsMiddleware(router)
-	http.Handle("/api/", corsHandler)
+	http.Handle(routes.ApiPrefix + "/", corsHandler)
 
 	certFile := "/etc/vuegolith/ssl/server.crt"
 	keyFile := "/etc/vuegolith/ssl/server.key"
