@@ -10,6 +10,7 @@ build_publish() {
   go build
 
   sudo mv vuegolith /usr/local/bin/vuegolith
+  sudo cp .env /usr/local/bin/vuegolith.env
   sudo cp server.key /etc/vuegolith/ssl/server.key
   sudo cp server.crt /etc/vuegolith/ssl/server.crt
 }

@@ -5,17 +5,15 @@ import (
 	"onursahin.dev/vuegolith/endpoints"
 )
 
-const ApiPrefix = "/api"
-
-func SetupRoutes() *mux.Router {
+func SetupRoutes(apiPrefix string) *mux.Router {
 	router := mux.NewRouter()
 
-	router.HandleFunc(ApiPrefix + "/log", endpoints.HandleLogGet).Methods("GET")
-	router.HandleFunc(ApiPrefix + "/log", endpoints.HandleLogPost).Methods("POST")
+	router.HandleFunc(apiPrefix + "/log", endpoints.HandleLogGet).Methods("GET")
+	router.HandleFunc(apiPrefix + "/log", endpoints.HandleLogPost).Methods("POST")
 
-	router.HandleFunc(ApiPrefix + "/uploads", endpoints.HandleUpload).Methods("POST")
-	router.HandleFunc(ApiPrefix + "/uploads", endpoints.HandleListUploads).Methods("GET")
-	router.HandleFunc(ApiPrefix + "/uploads", endpoints.HandleDeleteUpload).Methods("DELETE")
+	router.HandleFunc(apiPrefix + "/uploads", endpoints.HandleUpload).Methods("POST")
+	router.HandleFunc(apiPrefix + "/uploads", endpoints.HandleListUploads).Methods("GET")
+	router.HandleFunc(apiPrefix + "/uploads", endpoints.HandleDeleteUpload).Methods("DELETE")
 
 	return router
 }

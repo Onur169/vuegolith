@@ -1,8 +1,11 @@
 package utils
 
 import (
+	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -41,4 +44,49 @@ func CreateVuegolithUploadsDir() (string, error) {
 
 func IsPathSafe(path string) bool {
 	return !strings.Contains(path, "../")
+}
+
+func GetEnvVariable(key string, defaultValue string) string {
+    value, exists := os.LookupEnv(key)
+    if !exists {
+		fmt.Println("❌ Env " + key + " has not loaded. Use default value.")
+        return defaultValue
+    }
+	fmt.Println("✅ Env " + key + " has loaded")
+    return value
+}
+
+func ClearScreen() {
+	clearCmd := ""
+	switch runtime.GOOS {
+	case "linux", "darwin": // Unix-like systems
+		clearCmd = "clear"
+	case "windows": // Windows
+		clearCmd = "cls"
+	default:
+		// Unhandled operating system
+		fmt.Println("Unsupporteds Operating System")
+		return
+	}
+
+	cmd := exec.Command(clearCmd)
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
+func CreateEmptyVuegolithEnvFile(path string) error {
+    filename := "vuegolith.env"
+    
+    file, err := os.Create(path + "/" + filename)
+    if err != nil {
+        return err
+    }
+    defer file.Close()
+
+    _, err = file.WriteString("")
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
