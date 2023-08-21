@@ -66,7 +66,6 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Decode the JSON payload
 	var payload DeletePayload
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -75,7 +74,6 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filename := payload.File
-
 	if !utils.IsPathSafe(filename) {
 		response.WithJSON(w, http.StatusBadRequest, "Path is not safe")
 		return
@@ -88,23 +86,17 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	uploadsDir := filepath.Join(path, utils.GetUploadsDirName())
-
-	// Check if the file exists before attempting to delete
 	filePath := filepath.Join(uploadsDir, filename)
-
 	_, err = os.Stat(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// File does not exist
 			response.WithJSON(w, http.StatusNotFound, "File not found")
 		} else {
-			// Other error occurred while accessing the file
 			response.WithJSON(w, http.StatusInternalServerError, "Failed to access the file")
 		}
 		return
 	}
 
-	// Delete the file
 	err = os.Remove(filePath)
 	if err != nil {
 		response.WithJSON(w, http.StatusInternalServerError, "Failed to delete the file")
@@ -120,7 +112,6 @@ func HandleUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Determine Path
 	path, err := utils.GetHomeDir()
 	if err != nil {
 		response.WithJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
