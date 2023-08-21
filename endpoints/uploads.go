@@ -18,13 +18,13 @@ type UploadsList struct {
 
 func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		response.RespondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
+		response.WithJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 
 	path, err := utils.GetHomeDir()
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
 		return
 	}
 
@@ -33,7 +33,7 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 	// List all files in the uploads directory
 	files, err := os.ReadDir(uploadsDir)
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to list uploads")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to list uploads")
 		return
 	}
 
@@ -53,7 +53,7 @@ func HandleListUploads(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	response.RespondJSON(w, http.StatusOK, fileNames)
+	response.WithJSON(w, http.StatusOK, fileNames)
 }
 
 type DeletePayload struct {
@@ -62,7 +62,7 @@ type DeletePayload struct {
 
 func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
-		response.RespondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
+		response.WithJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 
@@ -70,20 +70,20 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 	var payload DeletePayload
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		response.RespondJSON(w, http.StatusBadRequest, "Failed to parse JSON payload")
+		response.WithJSON(w, http.StatusBadRequest, "Failed to parse JSON payload")
 		return
 	}
 
 	filename := payload.File
 
 	if !utils.IsPathSafe(filename) {
-		response.RespondJSON(w, http.StatusBadRequest, "Path is not safe")
+		response.WithJSON(w, http.StatusBadRequest, "Path is not safe")
 		return
 	}
 
 	path, err := utils.GetHomeDir()
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
 		return
 	}
 
@@ -96,10 +96,10 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			// File does not exist
-			response.RespondJSON(w, http.StatusNotFound, "File not found")
+			response.WithJSON(w, http.StatusNotFound, "File not found")
 		} else {
 			// Other error occurred while accessing the file
-			response.RespondJSON(w, http.StatusInternalServerError, "Failed to access the file")
+			response.WithJSON(w, http.StatusInternalServerError, "Failed to access the file")
 		}
 		return
 	}
@@ -107,51 +107,51 @@ func HandleDeleteUpload(w http.ResponseWriter, r *http.Request) {
 	// Delete the file
 	err = os.Remove(filePath)
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to delete the file")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to delete the file")
 		return
 	}
 
-	response.RespondJSON(w, http.StatusOK, nil)
+	response.WithJSON(w, http.StatusOK, nil)
 }
 
 func HandleUpload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		response.RespondJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
+		response.WithJSON(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 
 	// Determine Path
 	path, err := utils.GetHomeDir()
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
 		return
 	}
 
 	err = r.ParseMultipartForm(10 << 30) // 1GB maximum file size
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to parse form")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to parse form")
 		return
 	}
 
 	file, handler, err := r.FormFile("file")
 	if err != nil {
-		response.RespondJSON(w, http.StatusBadRequest, "Failed to get file from form")
+		response.WithJSON(w, http.StatusBadRequest, "Failed to get file from form")
 		return
 	}
 	defer file.Close()
 
 	f, err := os.OpenFile(filepath.Join(path+"/"+utils.GetUploadsDirName(), handler.Filename), os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to save file")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to save file")
 		return
 	}
 	defer f.Close()
 
 	_, err = io.Copy(f, file)
 	if err != nil {
-		response.RespondJSON(w, http.StatusInternalServerError, "Failed to write file content")
+		response.WithJSON(w, http.StatusInternalServerError, "Failed to write file content")
 		return
 	}
 
-	response.RespondJSON(w, http.StatusOK, nil)
+	response.WithJSON(w, http.StatusOK, nil)
 }

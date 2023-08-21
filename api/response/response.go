@@ -10,7 +10,7 @@ type APIResponse struct {
 	Data interface{} `json:"data"`
 }
 
-func RespondJSON(w http.ResponseWriter, status int, data interface{}) {
+func WithJSON(w http.ResponseWriter, status int, data interface{}) {
 	response := APIResponse{
 		Ack:  "success",
 		Data: data,
