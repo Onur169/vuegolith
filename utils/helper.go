@@ -29,10 +29,8 @@ func CreateVuegolithUploadsDir() (string, error) {
 
 	uploadsDir := filepath.Join(homeDir, GetUploadsDirName())
 
-	// Überprüfe, ob der Ordner bereits existiert
 	_, err = os.Stat(uploadsDir)
 	if os.IsNotExist(err) {
-		// Ordner existiert nicht, also erstellen
 		err = os.Mkdir(uploadsDir, 0755)
 		if err != nil {
 			return "", err
@@ -59,12 +57,11 @@ func GetEnvVariable(key string, defaultValue string) string {
 func ClearScreen() {
 	clearCmd := ""
 	switch runtime.GOOS {
-	case "linux", "darwin": // Unix-like systems
+	case "linux", "darwin":
 		clearCmd = "clear"
-	case "windows": // Windows
+	case "windows":
 		clearCmd = "cls"
 	default:
-		// Unhandled operating system
 		fmt.Println("Unsupporteds Operating System")
 		return
 	}

@@ -45,7 +45,6 @@ func HandleLogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Read body
 	c, err := io.ReadAll(r.Body)
 	if err != nil {
 		response.RespondJSON(w, http.StatusInternalServerError, "Failed to read response body")
@@ -53,21 +52,18 @@ func HandleLogPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	// Determine Path
 	path, err := utils.GetHomeDir()
 	if err != nil {
 		response.RespondJSON(w, http.StatusInternalServerError, "Failed to determine home dir")
 		return
 	}
 
-	// Validate content
 	content := string(c[:])
 	if strings.TrimSpace(content) == "" {
 		response.RespondJSON(w, http.StatusInternalServerError, "Cannot save empty log")
 		return
 	}
 
-	// Create or append to the log file
 	file, err := os.OpenFile(path+"/log.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		response.RespondJSON(w, http.StatusInternalServerError, "Failed to create log file")
@@ -75,8 +71,7 @@ func HandleLogPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// Write the log entry to the file
-	_, err = file.WriteString(string(c[:]) + "\n")
+	_, err = file.WriteString(content + "\n")
 	if err != nil {
 		response.RespondJSON(w, http.StatusInternalServerError, "Failed to write to log file")
 		return
