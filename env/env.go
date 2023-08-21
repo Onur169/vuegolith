@@ -2,6 +2,7 @@ package env
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/joho/godotenv"
@@ -18,15 +19,25 @@ type Env struct {
 	SecureURL     string
 }
 
+func GetEnvVariable(key string, defaultValue string) string {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		fmt.Println("❌ Env " + key + " has not loaded. Use default value.")
+		return defaultValue
+	}
+	fmt.Println("✅ Env " + key + " has loaded")
+	return value
+}
+
 func Load() Env {
 	return Env{
-		UploadsPath:   utils.GetEnvVariable("UPLOADS_PATH", "/uploads/"),
-		APIPrefix:     utils.GetEnvVariable("API_PREFIX", "/api"),
-		CertFile:      utils.GetEnvVariable("CERT_FILE", "/etc/vuegolith/ssl/server.crt"),
-		KeyFile:       utils.GetEnvVariable("KEY_FILE", "/etc/vuegolith/ssl/server.key"),
-		NonSecureURL:  utils.GetEnvVariable("NON_SECURE_URL", "http://localhost:"),
-		NonSecurePort: utils.GetEnvVariable("NON_SECURE_PORT", "8484"),
-		SecureURL:     utils.GetEnvVariable("SECURE_URL", "https://vuegolith.local/"),
+		UploadsPath:   GetEnvVariable("UPLOADS_PATH", "/uploads/"),
+		APIPrefix:     GetEnvVariable("API_PREFIX", "/api"),
+		CertFile:      GetEnvVariable("CERT_FILE", "/etc/vuegolith/ssl/server.crt"),
+		KeyFile:       GetEnvVariable("KEY_FILE", "/etc/vuegolith/ssl/server.key"),
+		NonSecureURL:  GetEnvVariable("NON_SECURE_URL", "http://localhost:"),
+		NonSecurePort: GetEnvVariable("NON_SECURE_PORT", "8484"),
+		SecureURL:     GetEnvVariable("SECURE_URL", "https://vuegolith.local/"),
 	}
 }
 

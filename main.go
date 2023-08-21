@@ -30,7 +30,6 @@ func main() {
 	}
 
 	env.Init(wd)
-
 	fmt.Println()
 	e := env.Load()
 	fmt.Println()

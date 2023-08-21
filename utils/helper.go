@@ -44,16 +44,6 @@ func IsPathSafe(path string) bool {
 	return !strings.Contains(path, "../")
 }
 
-func GetEnvVariable(key string, defaultValue string) string {
-	value, exists := os.LookupEnv(key)
-	if !exists {
-		fmt.Println("❌ Env " + key + " has not loaded. Use default value.")
-		return defaultValue
-	}
-	fmt.Println("✅ Env " + key + " has loaded")
-	return value
-}
-
 func ClearScreen() {
 	clearCmd := ""
 	switch runtime.GOOS {
