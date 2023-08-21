@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/joho/godotenv"
-	"onursahin.dev/vuegolith/api"
+	"onursahin.dev/vuegolith/api/middleware"
 	"onursahin.dev/vuegolith/routes"
 	"onursahin.dev/vuegolith/ui"
 	"onursahin.dev/vuegolith/utils"
@@ -81,11 +81,11 @@ func main() {
 	fs := http.FileServer(http.FS(assets))
 	http.Handle("/", http.StripPrefix("/", fs))
 
-	fs = api.FileServerWithCors(http.Dir(homeDir + "/" + utils.GetUploadsDirName()))
+	fs = middleware.FileServerWithCors(http.Dir(homeDir + "/" + utils.GetUploadsDirName()))
 	http.Handle(uploadsPath, http.StripPrefix(uploadsPath, fs))
 
 	router := routes.SetupRoutes(apiPrefix)
-	corsHandler := api.CorsMiddleware(router)
+	corsHandler := middleware.CorsMiddleware(router)
 	http.Handle(apiPrefix+"/", corsHandler)
 
 	var servedUrl string

@@ -47,13 +47,13 @@ func IsPathSafe(path string) bool {
 }
 
 func GetEnvVariable(key string, defaultValue string) string {
-    value, exists := os.LookupEnv(key)
-    if !exists {
+	value, exists := os.LookupEnv(key)
+	if !exists {
 		fmt.Println("❌ Env " + key + " has not loaded. Use default value.")
-        return defaultValue
-    }
+		return defaultValue
+	}
 	fmt.Println("✅ Env " + key + " has loaded")
-    return value
+	return value
 }
 
 func ClearScreen() {
@@ -75,18 +75,18 @@ func ClearScreen() {
 }
 
 func CreateEmptyVuegolithEnvFile(path string) error {
-    filename := "vuegolith.env"
-    
-    file, err := os.Create(path + "/" + filename)
-    if err != nil {
-        return err
-    }
-    defer file.Close()
+	filename := "vuegolith.env"
 
-    _, err = file.WriteString("")
-    if err != nil {
-        return err
-    }
+	file, err := os.Create(path + "/" + filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
 
-    return nil
+	_, err = file.WriteString("")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
