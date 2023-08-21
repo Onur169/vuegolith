@@ -1,6 +1,10 @@
 package middleware
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
 
 func CorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -20,4 +24,8 @@ func CorsMiddleware(next http.Handler) http.Handler {
 func FileServerWithCors(dir http.Dir) http.Handler {
 	fs := http.FileServer(dir)
 	return CorsMiddleware(fs)
+}
+
+func RouterWithCors(m *mux.Router) http.Handler {
+	return CorsMiddleware(m)
 }

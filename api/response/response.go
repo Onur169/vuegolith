@@ -6,8 +6,8 @@ import (
 )
 
 type APIResponse struct {
-	Ack  string      `json:"ack"`
-	Data interface{} `json:"data"`
+	Ack  string `json:"ack"`
+	Data any    `json:"data"`
 }
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {

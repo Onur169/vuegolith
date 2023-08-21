@@ -85,8 +85,8 @@ func main() {
 	http.Handle(uploadsPath, http.StripPrefix(uploadsPath, fs))
 
 	router := routes.SetupRoutes(apiPrefix)
-	corsHandler := middleware.CorsMiddleware(router)
-	http.Handle(apiPrefix+"/", corsHandler)
+	ch := middleware.RouterWithCors(router)
+	http.Handle(apiPrefix+"/", ch)
 
 	var servedUrl string
 	if isSecure {
