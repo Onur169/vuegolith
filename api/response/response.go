@@ -10,19 +10,26 @@ type APIResponse struct {
 	Data any    `json:"data"`
 }
 
-func WriteJSON(w http.ResponseWriter, status int, v any) error {
+type ACK string
+
+const (
+	ResponseSuccess ACK = "success"
+	ResponseFail    ACK = "fail"
+)
+
+func WriteJSON(w http.ResponseWriter, statusCode int, v any) error {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
+	w.WriteHeader(statusCode)
 	return json.NewEncoder(w).Encode(v)
 }
 
-func WithJSON(w http.ResponseWriter, status int, data any) {
+func WithJSON(w http.ResponseWriter, ack ACK, statusCode int, data any) {
 	response := APIResponse{
-		Ack:  "success",
+		Ack:  string(ack),
 		Data: data,
 	}
 
-	err := WriteJSON(w, status, response)
+	err := WriteJSON(w, statusCode, response)
 	if err != nil {
 		http.Error(w, "Failed to encode JSON response", http.StatusInternalServerError)
 	}
