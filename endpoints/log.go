@@ -36,7 +36,7 @@ func HandleLogGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WithJSON(w, response.ResponseSuccess, http.StatusOK, string(c[:]))
+	response.WithJSON(w, response.ResponseSuccess, http.StatusOK, string(c))
 }
 
 func HandleLogPost(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +47,7 @@ func HandleLogPost(w http.ResponseWriter, r *http.Request) {
 
 	c, err := io.ReadAll(r.Body)
 	if err != nil {
-		response.WithJSON(w, response.ResponseFail, http.StatusInternalServerError, "Failed to read response body")
+		response.WithJSON(w, response.ResponseFail, http.StatusInternalServerError, "Failed to read request body")
 		return
 	}
 	defer r.Body.Close()
@@ -58,9 +58,9 @@ func HandleLogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	content := string(c[:])
+	content := string(c)
 	if strings.TrimSpace(content) == "" {
-		response.WithJSON(w, response.ResponseFail, http.StatusInternalServerError, "Cannot save empty log")
+		response.WithJSON(w, response.ResponseFail, http.StatusBadRequest, "Cannot save empty log")
 		return
 	}
 

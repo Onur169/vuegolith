@@ -131,7 +131,10 @@ func HandleUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	f, err := os.OpenFile(filepath.Join(path+"/"+utils.GetUploadsDirName(), handler.Filename), os.O_WRONLY|os.O_CREATE, 0666)
+	uploadsDir := filepath.Join(path, utils.GetUploadsDirName())
+	filePath := filepath.Join(uploadsDir, handler.Filename)
+
+	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		response.WithJSON(w, response.ResponseFail, http.StatusInternalServerError, "Failed to save file")
 		return
